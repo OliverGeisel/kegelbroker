@@ -1,0 +1,30 @@
+{
+  "dataFolder": ".",
+  "display": {
+    "resolution": {
+      "width": 1920,
+      "height": 1080
+    },
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "refreshRate": 5000,
+  "paths": {
+  },
+  "lanes": [
+    "Bahn 1",
+    "Bahn 2",
+    "Bahn 3",
+    "Bahn 4",
+    "Bahn 9",
+    "Bahn 10",
+    "Bahn 11",
+    "Bahn 12",
+    "Bahn 9",
+    "Bahn 10",
+    "Bahn 11",
+    "Bahn 12"
+  ]
+}
