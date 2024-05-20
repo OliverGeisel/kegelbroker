@@ -12,7 +12,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Service
-class LocalMatchService(private val applicationProperties: ApplicationProperties) {
+class LocalMatchService(private val applicationProperties: ApplicationProperties,
+	private val liveMatchRepository: LiveMatchRepository){
 
 
 	private fun loadDatePath(): Path {
@@ -27,12 +28,11 @@ class LocalMatchService(private val applicationProperties: ApplicationProperties
 	}
 
 	fun createMatch(form: MatchCreateForm) {
-		val dateFormatted = form.matchDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-		val dayDir = loadDatePath().resolve(dateFormatted)
-		dayDir.toFile().mkdirs()
-		val matchDir = dayDir.resolve(form.matchName)
-		matchDir.toFile().mkdirs()
-		matchDir.resolve("match.json").toFile().writeText(form.toString())
+		val match = LiveMatch(form.matchDate, form.matchName, form.matchId, form.matchType)
+		require (!liveMatchRepository.existsByMatchName(match.matchName)) {
+			"Match with id ${form.matchName} already exists"
+		}
+		liveMatchRepository.save(match)
 	}
 
 	fun getMatch(date: LocalDate, matchName: String): Match<Game120> {
@@ -40,7 +40,7 @@ class LocalMatchService(private val applicationProperties: ApplicationProperties
 		val dayDir = loadDatePath().resolve(dateFormatted)
 		val matchDir = dayDir.resolve(matchName)
 		 val reader = KeglerheimGeneralReader(matchDir,true)
-		val match: Match<Game120> = reader.initNewMatch<Game120>()
+		val match: Match<Game120> = reader.initNewMatch()
 		match.pointSystem = _2Teams120PointSystem()
 		return match
 	}

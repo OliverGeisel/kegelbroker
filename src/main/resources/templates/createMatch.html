@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Neues Match</title>
@@ -11,12 +11,12 @@
 </head>
 <body>
 <main class="container">
-    <div th:replace="main-templates :: navigation"></div>
+    <div th:replace="~{main-templates :: navigation}"></div>
     <header>
         <h1>Neues Match</h1>
     </header>
     <section>
-        <form action="/create" method="post">
+       <form action="/create-t" method="get">
             <div class="mb-3">
                 <label for="matchName" class="form-label">Name des Matches</label>
                 <input type="text" class="form-control" id="matchName" name="matchName" placeholder="Name des Matches"
@@ -42,12 +42,18 @@
             </div>
             <div class="mb-3">
                 <label for="server" class="form-label">Server</label>
-                <input class="p1" id="server" name="pointSystem" required type="url">
+                <input class="p1" id="server" name="pointSystem" type="url">
             </div>
             <div class="mb-3">
                 <label for="localServer" class="form-label">Ist lokaler Server?</label>
-                <input type="checkbox" name="localServer" id="localServer">
+                <input type="checkbox" name="localServer" id="localServer" value="false">
             </div>
+            <div class="mb-3">
+                <label for="matchType" class="form-label">Matchtyp</label>
+                <select class="p1" id="matchType" name="matchType" required>
+                    <option th:each="matchType : ${matchTypes}" th:value="${matchType}"
+                            th:text="${matchType}" ></option>
+                </select>
             <button type="submit" class="btn btn-primary">Match erstellen</button>
         </form>
     </section>

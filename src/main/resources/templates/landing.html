@@ -11,7 +11,7 @@
 </head>
 <body>
 <main class="container">
-    <div th:replace="main-templates :: navigation"></div>
+    <div th:replace="~{main-templates :: navigation}"></div>
     <header>
         <h1>Willkommen bei Kegelbroker</h1>
     </header>
@@ -21,18 +21,22 @@
         direkt Zugriff auf die Daten hat. Es kann die Spiele direkt im Browser anzeigen und/oder die Daten an einen
         Server senden, der die Daten dann für andere Anwendungen bereitstellt oder anzeigt.
     </section>
-    <section>
+    <section class="pt-2">
         <header>
             <h2>Momentan laufende Spiele</h2>
         </header>
         <article>
+            <p th:if="${matches.empty}">Es sind keine Spiele vorhanden.
+                <br>
+                <a href="/create">Erstelle ein neues Spiel</a>
+            </p>
             <div class="card" th:each="match :${matches}">
                 <div class="card-header">
-                    <span th:remove="tag" th:text="'hallo'"></span>
+                    <span th:remove="tag" th:text="${match.matchName}"></span>
                 </div>
                 <div class="card-body">
                     Es spielen:
-                    <h5 class="card-title"> M1</h5>
+                    <h5 class="card-title" th:text="${match.matchDir}">M1</h5>
                 </div>
 
                 <div class="card-footer">
