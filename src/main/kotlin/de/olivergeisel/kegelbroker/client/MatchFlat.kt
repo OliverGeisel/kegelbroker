@@ -12,6 +12,9 @@ class MatchFlat<G : Game>(match: Match<G>, val teams: List<TeamFlat<G>>, val ext
 	null,
 	null
 ) {
+
+	var finished = match.statusInfo.isFinished
+
 	override fun getTeams(): Array<out Team<GameFlat>> {
 		return teams.toTypedArray()
 	}

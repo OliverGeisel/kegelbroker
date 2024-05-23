@@ -7,7 +7,7 @@ function updateTable(game, number) {
 
     const sets = game.sets
     const sumData = {}
-    sumData.throwCount = game.numberOfWurf
+    sumData.anzahlGespielteWuerfe = game.numberOfWurf
     sumData.volleScore = game.totalVolle
     sumData.abraeumenScore = game.totalAbraeumen
     sumData.score = game.totalScore
@@ -21,12 +21,11 @@ function updateTable(game, number) {
 
 function updateRow(row, data) {
     const cells = row.children
-    cells[0].innerHTML = data.throwCount
+    cells[0].innerHTML = data.anzahlGespielteWuerfe
     cells[1].innerHTML = data.volleScore
     cells[2].innerHTML = data.abraeumenScore
     cells[3].innerHTML = data.score
     cells[4].innerHTML = data.anzahlFehler
-    cells[5].innerHTML = 0
 }
 
 function updatePicture(picture, number) {
