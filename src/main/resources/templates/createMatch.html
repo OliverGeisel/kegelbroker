@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Neues Match</title>
@@ -16,7 +16,7 @@
         <h1>Neues Match</h1>
     </header>
     <section>
-       <form action="/create-t" method="get">
+        <form action="create" method="post">
             <div class="mb-3">
                 <label for="matchName" class="form-label">Name des Matches</label>
                 <input type="text" class="form-control" id="matchName" name="matchName" placeholder="Name des Matches"
@@ -54,6 +54,7 @@
                     <option th:each="matchType : ${matchTypes}" th:value="${matchType}"
                             th:text="${matchType}" ></option>
                 </select>
+            </div>
             <button type="submit" class="btn btn-primary">Match erstellen</button>
         </form>
     </section>

@@ -1,8 +1,6 @@
 package de.olivergeisel.kegelbroker.client
 
-import core.game.Game
 import core.game.Game120
-import core.match.Match
 import org.slf4j.LoggerFactory
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.time.LocalDate
+import java.util.*
 
 @Controller
 @PreAuthorize("hasRole('ADMIN')")
@@ -42,7 +41,7 @@ class LandingController(
 		return localMatchService.getMatchNames(date)
 	}
 
-	@GetMapping("/create-t")
+	@PostMapping("/create")
 	fun createMatch(form: MatchCreateForm): String {
 		LOGGER.info("Start creating match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
 		try {
@@ -55,11 +54,47 @@ class LandingController(
 		return "redirect:/"
 	}
 
-	@GetMapping("/get-match")
-	@ResponseBody
-	fun <G : Game> match(@RequestParam date: LocalDate, @RequestParam matchName: String): Match<GameFlat> {
-		val match = localMatchService.getMatch(date, matchName)
-		return matchFlattener.flat(match)
+	@GetMapping("/detail")
+	fun detail(@RequestParam id: UUID, model: Model): String {
+		val match = matchRepository.findById(id)
+		if (match.isEmpty) {
+			model.addAttribute("error", "Match not found")
+			return "live-match-details"
+		}
+		model.addAttribute("match", matchRepository.findById(id).get())
+		return "live-match-details"
+	}
+
+	@PostMapping("/detail")
+	fun detail(@RequestParam id: UUID, @RequestParam action: String): String {
+		val match = matchRepository.findById(id)
+		if (match.isEmpty) {
+			return "redirect:"
+		}
+		when (action) {
+			"continue" -> {
+				match.get().running = true
+			}
+
+			"end" -> {
+				match.get().running = false
+			}
+
+			"static" -> {
+				match.get().static = true
+			}
+
+			"update" -> {
+				match.get().static = false
+			}
+
+			"delete" -> {
+				localMatchService.deleteMatch(match.get())
+				return "redirect:/"
+			}
+		}
+		matchRepository.save(match.get())
+		return "redirect:/detail?id=$id"
 	}
 
 }
