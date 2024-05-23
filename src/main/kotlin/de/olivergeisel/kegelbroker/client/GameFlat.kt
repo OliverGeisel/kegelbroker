@@ -66,7 +66,7 @@ class GameFlat(game: Game):Game(null){
 	}
 
 	override fun getTotalVolle(): Int {
-		return sets.sumOf { it.anzahlVolle }
+		return sets.sumOf { it.volleScore }
 	}
 
 	override fun getTotalAbraeumen(): Int {

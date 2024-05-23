@@ -1,14 +1,11 @@
 package de.olivergeisel.kegelbroker.client
 
 import core.game.Game
-import core.match.GeneralMatchInfo
 import core.match.Match
-import core.match.MatchStatusInfo
-import core.match.NormalMatchConfig
 import core.team_and_player.Player
 import core.team_and_player.Team
 
-class MatchFlat<G : Game>(match:Match<G> , val teams: List<TeamFlat<G>>) : Match<GameFlat>(
+class MatchFlat<G : Game>(match: Match<G>, val teams: List<TeamFlat<G>>, val extra: Any) : Match<GameFlat>(
 	match.config,
 	match.generalMatchInfo,
 	match.statusInfo,

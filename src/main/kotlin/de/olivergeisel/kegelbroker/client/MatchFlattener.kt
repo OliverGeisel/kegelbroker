@@ -25,6 +25,16 @@ class MatchFlattener<T : Game> {
 			val flatTeam = TeamFlat(team)
 			teams.add(flatTeam)
 		}
-		return MatchFlat(match, teams)
+		val extra = LinkedHashMap<String, List<String>>()
+		for (team in match.teams) {
+			val teamName = team.name
+			val playerNames = LinkedList<String>()
+			val copy = team.players.toMutableList()
+			copy.sortBy { it.game.totalScore }
+			copy.reverse()
+			copy.map { it.completeName }.forEach { playerNames.add(it) }
+			extra[teamName] = playerNames
+		}
+		return MatchFlat(match, teams, extra)
 	}
 }

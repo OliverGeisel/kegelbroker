@@ -2,140 +2,363 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Vorlauf</title>
+    <title th:text="${id}">Vorlauf</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
+    <script src="/js/vorlauf.js"></script>
+    <style>
+
+        .svg-container {
+            display: inline-block;
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%;
+            vertical-align: top;
+            overflow: hidden;
+        }
+
+        .svg-content {
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+
+        .pin-stand {
+            fill: #00ffc4;
+            stroke: #000000;
+            stroke-width: 1%;
+        }
+
+        .pin {
+            fill: #FF0000;
+        }
+
+        .pin-hit {
+            fill: #ff2727;
+            stroke: #000000;
+            stroke-width: 1%;
+            animation: hit-animation 1.3s;
+        }
+
+        @keyframes hit-animation {
+            0% {
+                r: 5;
+            }
+            50% {
+                r: 6;
+            }
+            100% {
+                r: 5;
+            }
+        }
+
+    </style>
 </head>
 <body>
-<main class="container">
+<main class="container-fluid">
     <div th:replace="~{matchDisplay/basic-match-fragments :: alpha-info}"></div>
+    <!--/*@thymesVar id="match" type="de.olivergeisel.kegelplay.infrastructure.data_reader.MatchNTeams"*/-->
     <section>
         <header>
             <h2 class="centering text-center pb-3">Vorlauf</h2>
         </header>
         <article id="current-players">
-            <!--/*@thymesVar id="match" type="de.olivergeisel.kegelplay.infrastructure.data_reader.MatchNTeams"*/-->
             <div class="row">
-                <div class="col-3" id="lane-1" th:with="player=${match.getCurrentPlayers()[0]}">
+                <div class="col-12 col-sm-6 col-md-3" id="lane-1" th:with="player=${match.getCurrentPlayers()[0]}">
                     <h3>Bahn 1</h3>
                     <h4 th:text="${player.vorname}"></h4>
                     <h4 th:text="${player.nachname}"></h4>
-                    <p th:text="${player.game}"></p>
                     <div><!-- Table-->
-                        <table class="table table-striped">
+                        <table class="table table-striped" th:with="game=${player.game}">
                             <thead>
                             <tr>
                                 <th>Wurf</th>
                                 <th>Volle</th>
                                 <th>Räumer</th>
                                 <th>Gesamt</th>
-                                <th>Fehlwurf</th>
-                                <th>Punkte</th>
+                                <th>Fw</th>
+                                <th>P</th>
                             </tr>
                             </thead>
-                            <tbody id="player-rows">
-                            <tr>
-                                <td>30</td>
-                                <td>95</td>
-                                <td>45</td>
-                                <td>140</td>
+                            <tbody>
+                            <tr id="p1-r1" th:with="set=${game.getDurchgang(0)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
                                 <td>0</td>
-                                <td>1</td>
                             </tr>
-                            <tr>
-                                <td>30</td>
-                                <td>96</td>
-                                <td>45</td>
-                                <td>141</td>
+                            <tr id="p1-r2" th:with="set=${game.getDurchgang(1)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
                                 <td>0</td>
-                                <td>1</td>
                             </tr>
-                            <tr>
-                                <td>30</td>
-                                <td>92</td>
-                                <td>55</td>
-                                <td>147</td>
+                            <tr id="p1-r3" th:with="set=${game.getDurchgang(2)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
                                 <td>0</td>
-                                <td>1</td>
                             </tr>
-                            <tr>
-                                <td>30</td>
-                                <td>102</td>
-                                <td>54</td>
-                                <td>156</td>
+                            <tr id="p1-r4" th:with="set=${game.getDurchgang(3)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
                                 <td>0</td>
-                                <td>1</td>
                             </tr>
                             </tbody>
                             <tfoot>
-                            <tr id="player-summary">
-                                <td>120</td>
-                                <td>XYZ</td>
-                                <td>ABC</td>
-                                <td>587</td>
+                            <tr id="p1-summary">
+                                <td th:text="${game.numberOfWurf}">120</td>
+                                <td th:text="${game.totalVolle}">XYZ</td>
+                                <td th:text="${game.totalAbraeumen}">ABC</td>
+                                <td th:text="${game.totalScore}">587</td>
+                                <td th:text="${game.totalFehlwurf}">0</td>
                                 <td>0</td>
-                                <td>4</td>
                             </tr>
                             </tfoot>
                         </table>
                     </div>
-                    <div id="lane-1-wurfbild">
+                    <div class="p-1" id="lane-1-wurfbild">
                         <div class="row justify-content-center">
-                            <div id="fallbild">
-                                <svg id="picture-svg"  class="col-md border border-4"
+                            <div class="svg-container">
+                                <svg class="svg-content col-md border border-4" id="picture-1-svg"
+                                     preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100"
                                      xmlns="http://www.w3.org/2000/svg">
-                                    <!-- Hier werden die Kreise gezeichnet -->
                                 </svg>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-3" id="lane-2" th:with="player=${match.getCurrentPlayers()[1]}">
+                <div class="col-12 col-sm-6 col-md-3" id="lane-2" th:with="player=${match.getCurrentPlayers()[1]}">
                     <h3>Bahn 2</h3>
                     <h4 th:text="${player.vorname}"></h4>
                     <h4 th:text="${player.nachname}"></h4>
-                    <p th:text="${player.game}"></p>
-                    <div id="lane-2-wurfbild">
+                    <div><!-- Table-->
+                        <table class="table table-striped" th:with="game=${player.game}">
+                            <thead>
+                            <tr>
+                                <th>Wurf</th>
+                                <th>Volle</th>
+                                <th>Räumer</th>
+                                <th>Gesamt</th>
+                                <th>Fw</th>
+                                <th>P</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr id="p2-r1" th:with="set=${game.getDurchgang(0)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr id="p2-r2" th:with="set=${game.getDurchgang(1)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr id="p2-r3" th:with="set=${game.getDurchgang(2)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr id="p2-r4" th:with="set=${game.getDurchgang(3)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr id="p2-summary">
+                                <td th:text="${game.numberOfWurf}">120</td>
+                                <td th:text="${game.totalVolle}">XYZ</td>
+                                <td th:text="${game.totalAbraeumen}">ABC</td>
+                                <td th:text="${game.totalScore}">587</td>
+                                <td th:text="${game.totalFehlwurf}">0</td>
+                                <td>0</td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="p-1" id="lane-2-wurfbild">
                         <div class="row justify-content-center">
-                            <div id="fallbild-2">
-                                <svg id="picture-svg" width="400" height="400" class="col-md border border-4"
+                            <div class="svg-container">
+                                <svg class="svg-content col-md border border-4" id="picture-2-svg"
+                                     preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100"
                                      xmlns="http://www.w3.org/2000/svg">
-                                    <!-- Hier werden die Kreise gezeichnet -->
                                 </svg>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-3" id="lane-3" th:with="player=${match.getCurrentPlayers()[2]}">
+                <div class="col-12 col-sm-6 col-md-3" id="lane-3" th:with="player=${match.getCurrentPlayers()[2]}">
                     <h3>Bahn 3</h3>
                     <h4 th:text="${player.vorname}"></h4>
                     <h4 th:text="${player.nachname}"></h4>
-                    <p th:text="${player.game}"></p>
-                    <div id="lane-3-wurfbild">
+                    <div><!-- Table-->
+                        <table class="table table-striped" th:with="game=${player.game}">
+                            <thead>
+                            <tr>
+                                <th>Wurf</th>
+                                <th>Volle</th>
+                                <th>Räumer</th>
+                                <th>Gesamt</th>
+                                <th>Fw</th>
+                                <th>P</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr id="p3-r1" th:with="set=${game.getDurchgang(0)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr id="p3-r2" th:with="set=${game.getDurchgang(1)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr id="p3-r3" th:with="set=${game.getDurchgang(2)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr id="p3-r4" th:with="set=${game.getDurchgang(3)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr id="p3-summary">
+                                <td th:text="${game.numberOfWurf}">120</td>
+                                <td th:text="${game.totalVolle}">XYZ</td>
+                                <td th:text="${game.totalAbraeumen}">ABC</td>
+                                <td th:text="${game.totalScore}">587</td>
+                                <td th:text="${game.totalFehlwurf}">0</td>
+                                <td>0</td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="p-1" id="lane-3-wurfbild">
                         <div class="row justify-content-center">
-                            <div id="fallbild-3">
-                                <svg id="picture-svg" width="400" height="400" class="col-md border border-4"
+                            <div class="svg-container">
+                                <svg class="svg-content col-md border border-4" id="picture-3-svg"
+                                     preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100"
                                      xmlns="http://www.w3.org/2000/svg">
-                                    <!-- Hier werden die Kreise gezeichnet -->
                                 </svg>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-3" id="lane-4" th:with="player=${match.getCurrentPlayers()[3]}">
+                <div class="col-12 col-sm-6 col-md-3" id="lane-4" th:with="player=${match.getCurrentPlayers()[3]}">
                     <h3>Bahn 4</h3>
                     <h4 th:text="${player.vorname}"></h4>
                     <h4 th:text="${player.nachname}"></h4>
-                    <p th:text="${player.game}"></p>
-                    <div id="lane-4-wurfbild">
+                    <div><!-- Table-->
+                        <table class="table table-striped" th:with="game=${player.game}">
+                            <thead>
+                            <tr>
+                                <th>Wurf</th>
+                                <th>Volle</th>
+                                <th>Räumer</th>
+                                <th>Gesamt</th>
+                                <th>Fw</th>
+                                <th>P</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr id="p4-r1" th:with="set=${game.getDurchgang(0)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr id="p4-r2" th:with="set=${game.getDurchgang(1)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr id="p4-r3" th:with="set=${game.getDurchgang(2)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr id="p4-r4" th:with="set=${game.getDurchgang(3)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td>0</td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr id="p4-summary">
+                                <td th:text="${game.numberOfWurf}">120</td>
+                                <td th:text="${game.totalVolle}">XYZ</td>
+                                <td th:text="${game.totalAbraeumen}">ABC</td>
+                                <td th:text="${game.totalScore}">587</td>
+                                <td th:text="${game.totalFehlwurf}">0</td>
+                                <td>0</td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="p-1" id="lane-4-wurfbild">
                         <div class="row justify-content-center">
-                            <div id="fallbild-4">
-                                <svg id="picture-svg" width="400" height="400" class="col-md border border-4"
+                            <div class="svg-container">
+                                <svg class="svg-content col-md border border-4" id="picture-4-svg"
+                                     preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100"
                                      xmlns="http://www.w3.org/2000/svg">
-                                    <!-- Hier werden die Kreise gezeichnet -->
                                 </svg>
                             </div>
                         </div>
@@ -143,131 +366,170 @@
                 </div>
             </div>
         </article>
-
         <article id="team-ranking">
+            <h3>Platzierung</h3>
+            <div class="row">
+                <div class="col" th:each="team:${match.teams}">
+                    <h4 th:text="${team.name}">Team 1</h4>
+                    <div class="card" th:each="player:${team.players}">
+                        <div class="card-header">
+                            <h4 th:text="${player.completeName}">Player 1</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text" th:text="${player.game.totalScore}">score</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </article>
     </section>
+    <hr>
+    <section class="pb-1">
+        <form class="form-control p-2" method="dialog">
+            <label for="interval">Aktualisierungsintervall in Sekunden</label>
+            <input class="number-button" id="interval" min="5" step="1" type="number" value="5">
+            <div class="btn-group pt-1">
+                <button class="btn btn-primary pt-1" onclick="updateInterval()" type="button">Aktualisieren</button>
+                <button class="btn btn-warning pt-1" onclick="refresh()" type="button">Manuell aktualisieren</button>
+                <button class="btn btn-danger pt-1" onclick="stopUpdate()" type="button">Stop
+                </button>
+            </div>
+            <svg height="20">
+                <circle cx="10" cy="10" fill="green" id="live-point" r="5" stroke="black" stroke-width="1"/>
+            </svg>
+        </form>
+        <div class="alert alert-danger" hidden id="connection-status"></div>
+    </section>
 </main>
-<style>
-    #picture-svg {
-        border: 1px solid black;
-    }
+<script th:inline="javascript">
 
-    .pin-stand {
-        fill: #00FF00;
-        stroke: #bd0fec;
-        stroke-width: 4;;
-    }
-
-    .pin {
-        fill: #FF0000;
-    }
-
-    .pin-hint {
-        fill: #0000FF;
-    }
-
-</style>
-<script>
-    let kreise = []
     window.onload = function () {
         function createSquare(x, y, size) {
-            var square = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            const square = document.createElementNS("http://www.w3.org/2000/svg", "rect");
             square.setAttribute("x", x);
             square.setAttribute("y", y);
             square.setAttribute("width", size);
             square.setAttribute("height", size);
-            square.setAttribute("transform", "rotate(45 " + (x + size / 2) + " " + (y + size / 2) + ")");
+            square.setAttribute("transform", `rotate(45)`);
             square.setAttribute("fill", "none");
             square.setAttribute("stroke", "black");
-            svg.appendChild(square);
+            square.setAttribute("id", "square")
+            return square
         }
 
-
-        const svg = document.getElementById("picture-svg");
-        let width = svg.clientWidth; // Breite des SVG-Elements
-        let height = width; // Höhe des SVG-Elements
-
-        createSquare(59, 59, width * 0.7);
-
-        // Funktion zum Erstellen eines Kreises
-        function createCircle(cx, cy, r, id) {
-            var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        function createCircle(cx, cy, r) {
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             circle.setAttribute("cx", cx);
             circle.setAttribute("cy", cy);
             circle.setAttribute("r", r);
             circle.setAttribute("fill", "black");
-            circle.setAttribute("id", "kreis_" + (id));
             circle.classList.add("pin-stand");
-            svg.appendChild(circle);
+            return circle
         }
 
-        // Kreise erstellen
-        const radius = 25;
-        const gapX = 75;
-        let gapY = 35;
-        let left = 0;
-        let bottom = 400;
-        let rows = [1, 2, 3, 2, 1];
-        let idCounter = 1;
-        for (let i = 0; i < rows.length; i++) {
-            let xOffset = (3 - rows[i] - 1) * gapX + radius * 2;
-            for (let j = 0; j < rows[i]; j++) {
-                let x = left + xOffset + j * gapX * 2 + gapX;
-                let y = bottom - (rows.length - i - 1) * gapY * 2 - gapY - radius;
-                createCircle(x, y, radius, idCounter);
-
-                let kreisId = 'kreis_' + idCounter;
-                kreise.push(kreisId);
-                idCounter++;
+        for (let number = 1; number <= 4; number++) {
+            const svg = document.getElementById(`picture-${number}-svg`)
+            svg.appendChild(createSquare(35.5, -35.5, 70))
+            const radius = 25;
+            const gapX = 75;
+            let gapY = 35;
+            let left = 0;
+            let rows = [1, 2, 3, 2, 1];
+            // all 9 circles (pins)
+            for (let i = 0; i < rows.length; i++) {
+                let xOffset = (3 - rows[i] - 1) * gapX + radius * 2;
+                for (let j = 0; j < rows[i]; j++) {
+                    let x = left + xOffset + j * gapX * 2 + gapX;
+                    let y = (rows.length - i - 1) * gapY * 2 + gapY + radius;
+                    svg.appendChild(createCircle(x, y, radius))
+                }
             }
+            resizePicture(number);
         }
     };
 
-    window.onresize = function () {
-        var svg = document.getElementById("picture-svg");
-        var width = svg.clientWidth; // Breite des SVG-Elements
-        var dotSpacing = width / 10; // Abstand zwischen den Kreisen (abhängig von der Breite des SVG-Elements)
+    function resizePicture(id) {
+        const svg = document.getElementById(`picture-${id}-svg`);
+        const square = svg.querySelector("#square");
+        square.height.baseVal.value = 70
+        square.width.baseVal.value = 70
+        square.x.baseVal.value = 35.5
+        square.y.baseVal.value = -35.5
 
-        // Kreise neu positionieren und anpassen
-        var circles = svg.querySelectorAll("circle");
-        const dotRadius = width / 20;
-        const gapX = 75;
-        let gapY = 35;
-        let left = 0;
-        let bottom = 400;
+        const circles = svg.querySelectorAll("circle");
+        const dotRadius = 5;
+        const gapX = 20;
+        let gapY = 10;
         let rows = [1, 2, 3, 2, 1];
         let idCounter = 1;
-
         for (let i = 0; i < rows.length; i++) {
             let xOffset = (3 - rows[i] - 1) * gapX + dotRadius * 2;
             for (let j = 0; j < rows[i]; j++) {
-                let x = left + xOffset + j * gapX * 2 + gapX;
-                let y = bottom - (rows.length - i - 1) * gapY * 2 - gapY - dotRadius * 2;
+                let x = xOffset + j * gapX * 2 + gapX;
+                let y = (rows.length - i - 1) * gapY * 2 + gapY;
                 let circle = circles[idCounter - 1]
                 circle.setAttribute("cx", x);
                 circle.setAttribute("cy", y);
                 circle.setAttribute("r", dotRadius);
-                idCounter++;
+                ++idCounter;
             }
         }
-    };
+    }
 
-    function refresh() {
-        fetch('/vorlauf')
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                const playerRows = document.getElementById('player-rows');
-
-            });
+    async function refresh() {
+        const id = /*[[${id}]]*/""
+        let data;
+        try {
+            const response = await fetch(`/live/get-match?matchId=${id}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            data = await response.json()
+        } catch (error) {
+            ++connectionErrorCounter
+            const state = document.getElementById('connection-status')
+            state.hidden = false
+            if (connectionErrorCounter > 10) {
+                state.innerText =
+                    'Connection failed too often - request stopped. Please check the server connection and then restart the request.'
+                stopUpdate()
+            } else {
+                state.innerText = `Connection failed ${connectionErrorCounter} times. Trying again in ${document.getElementById('interval').value} seconds`
+            }
+            return
         }
+        connectionErrorCounter = 0
+        const state = document.getElementById('connection-status')
+        state.innerText = ''
+        state.hidden = true
+        const start = Date.now();
+        const players = data.currentPlayers
+        for (let i = 0; i < players.length; i++) {
+            const player = players[i]
+            updateTable(player.game, i + 1)
+            updatePicture(player.game.lastWurf.bild, i + 1)
+        }
+        // teamRanking update
+        updateTeamRanking(data.extra, data.teams)
+        const end = Date.now()
+        console.log(`Refresh took ${end - start} ms`)
+    }
 
-    let intervalId = setInterval(refresh,1000)
-    document.getElementById('intervalButton').addEventListener('click', function () {
-        const interval = this.value;
-        intervalId = setInterval(refresh, interval);
-    });
+    function stopUpdate() {
+        clearInterval(intervalId)
+        document.getElementById('live-point').setAttribute('fill', 'red')
+    }
+
+    function updateInterval() {
+        clearInterval(intervalId)
+        document.getElementById('live-point').setAttribute('fill', 'green')
+        intervalId = setInterval(refresh, document.getElementById('interval').value * 1000)
+    }
+
+    let intervalId = setInterval(refresh, 5_000)
+    let connectionErrorCounter = 0
+
+
 </script>
 </body>
 </html>
