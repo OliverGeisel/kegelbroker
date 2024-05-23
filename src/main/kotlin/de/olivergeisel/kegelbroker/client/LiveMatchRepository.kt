@@ -12,4 +12,10 @@ interface LiveMatchRepository : CrudRepository<LiveMatch, UUID>{
 
 	fun existsByMatchName(matchName: String): Boolean
 
+	fun findByRunning(running: Boolean): Streamable<LiveMatch>
+
+	fun findByMatchType(matchType: MatchType): Streamable<LiveMatch>
+
+	fun findByRunningAndStatic(running: Boolean, static: Boolean): Streamable<LiveMatch>
+
 }

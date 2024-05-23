@@ -29,12 +29,14 @@ class SecurityConfig : WebMvcConfigurer {
 	override fun addViewControllers(registry: ViewControllerRegistry) {
 		registry.addViewController("/login").setViewName("login")
 	}
+
 	@Bean
 	fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
 
 		http.csrf { it.disable() }
 		http.authorizeHttpRequests { it.anyRequest().permitAll() }
 		http.formLogin { }
+		http.cors { }
 		http.logout { it.logoutSuccessUrl("/").clearAuthentication(true).deleteCookies("JSESSIONID") }
 		return http.build();
 	}
