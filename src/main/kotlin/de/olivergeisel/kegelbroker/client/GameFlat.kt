@@ -19,8 +19,8 @@ class GameFlat(game: Game):Game(null){
 		return date
 	}
 
-	override fun setDate(p0: LocalDateTime?) {
-		date = p0!!
+	override fun setDate(date: LocalDateTime?) {
+		this.date = date
 	}
 
 	override fun getPlayer(): Player<Game>? {

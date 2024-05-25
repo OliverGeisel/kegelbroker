@@ -1,19 +1,15 @@
 package de.olivergeisel.kegelbroker.client;
 
 import core.game.Game;
+import core.game.GameKind;
 import core.match.Match;
 import de.olivergeisel.kegelbroker.ApplicationProperties;
-import de.olivergeisel.kegelplay.infrastructure.data_reader.KeglerheimGeneralReader;
-import de.olivergeisel.kegelplay.infrastructure.data_reader.UnsupportedMatchSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.nio.file.Path;
-import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/live")
@@ -55,7 +51,7 @@ public class MatchDisplayController {
 			model.addAttribute("error", "Match not found. Nice Try! ;)");
 			return STR."\{templateDir}empty";
 		}
-		return "matchDisplay";
+		return STR."\{templateDir}empty";// "matchDisplay";
 	}
 
 	@GetMapping("4-against/{matchId}")
@@ -66,7 +62,7 @@ public class MatchDisplayController {
 			model.addAttribute("error", "Match not found. Nice Try! ;)");
 			return STR."\{templateDir}empty";
 		}
-		return "matchDisplay4Against";
+		return STR."\{templateDir}empty";//"matchDisplay4Against";
 	}
 
 	@GetMapping("2-against/{matchId}")
@@ -76,29 +72,25 @@ public class MatchDisplayController {
 			model.addAttribute("error", "Match not found. Nice Try! ;)");
 			return STR."\{templateDir}empty";
 		}
-		return "matchDisplay2Against";
+		return STR."\{templateDir}empty";// "matchDisplay2Against";
 	}
 
 	@GetMapping("vorlauf/{matchId}")
 	public String displayVorlaufMatch(@PathVariable("matchId") String matchId, Model model) {
 		var match = liveMatchRepository.findByMatchName(matchId);
+		Match correctMatch;
 		if (match == null) {
 			model.addAttribute("error", "Match not found. Nice Try! ;)");
 			return STR."\{templateDir}empty";
 		} else {
-			var dateFormatted = match.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-			var path = Path.of(applicationProperties.getDataPath()).resolve(dateFormatted).resolve(match.getMatchDir());
-			try {
-				var correctMatch = new KeglerheimGeneralReader(path, true).initNewMatch();
-				model.addAttribute("id", matchId);
-				model.addAttribute("match", correctMatch);
-			} catch (UnsupportedMatchSchema e) {
-				LOGGER.error("Error while reading match", e);
-				model.addAttribute("error", "Error while reading match");
-			}
+			correctMatch = localMatchService.getMatchCached(matchId);
+			model.addAttribute("id", matchId);
+			model.addAttribute("match", correctMatch);
+		}
+		if (correctMatch.getConfig().getKind() == GameKind.GAME_40) {
+			return STR."\{templateDir}match-display-vorlauf-sprint";
 		}
 		return STR."\{templateDir}match-display-vorlauf";
 	}
-
 
 }

@@ -1,3 +1,11 @@
+function updateHeader(player, number) {
+    const header = document.getElementById(`p${number}-header`)
+    header.children[0].textContent = player.vorname
+    header.children[1].textContent = player.nachname
+    header.children[2].textContent = player.club
+}
+
+
 function updateTable(game, number) {
     const row1 = document.getElementById(`p${number}-r1`)
     const row2 = document.getElementById("p" + number + "-r2")
@@ -12,29 +20,46 @@ function updateTable(game, number) {
     sumData.abraeumenScore = game.totalAbraeumen
     sumData.score = game.totalScore
     sumData.anzahlFehler = game.totalFehlwurf
-    updateRow(row1, sets[0])
-    updateRow(row2, sets[1])
-    updateRow(row3, sets[2])
-    updateRow(row4, sets[3])
-    updateRow(summary, sumData)
+    let back = updateRow(row1, sets[0])
+    back += updateRow(row2, sets[1])
+    back += updateRow(row3, sets[2])
+    back += updateRow(row4, sets[3])
+    back += updateRow(summary, sumData)
+    return back
 }
 
 function updateRow(row, data) {
     const cells = row.children
+    let back = cells[0].innerHTML != data.anzahlGespielteWuerfe;
     cells[0].innerHTML = data.anzahlGespielteWuerfe
+    back += cells[1].innerHTML != data.volleScore
     cells[1].innerHTML = data.volleScore
+    back += cells[2].innerHTML != data.abraeumenScore
     cells[2].innerHTML = data.abraeumenScore
+    back += cells[3].innerHTML != data.score
     cells[3].innerHTML = data.score
+    back += cells[4].innerHTML != data.anzahlFehler
     cells[4].innerHTML = data.anzahlFehler
+    return back
 }
 
-function updatePicture(picture, number) {
+function updatePicture(wurf, number) {
+    const picture = wurf.bild
     const svg = document.getElementById(`picture-${number}-svg`)
     const circles = svg.querySelectorAll("circle")
     for (let i = 0; i < circles.length; i++) {
         circles[i].classList.remove("pin-hit", "pin-stand")
     }
-    const code = picture.bildEncoded
+    if (wurf.anschub) {
+        setTimeout(() => {
+            setCircles(circles, picture.bildEncoded)
+        }, 10)
+    } else {
+        setCircles(circles, picture.bildEncoded)
+    }
+}
+
+function setCircles(circles, code) {
     const one = (code & 1) != 0;
     const two = ((code >> 1) & 1) != 0;
     const three = ((code >> 2) & 1) != 0;
@@ -70,7 +95,34 @@ function updateTeamRanking(teamRankingData, teamsData) {
             const cardHeader = card.querySelector('.card-header');
             cardHeader.children[0].textContent = `${j + 1}. ${playerData.completeName}`;
             const cardBody = card.querySelector('.card-body');
-            cardBody.children[0].textContent = playerData.game.totalScore;
+            const score = playerData.game.totalScore
+            const set1Score = playerData.game.sets[0].score
+            const set2Score = playerData.game.sets[1].score
+            const set3Score = playerData.game.sets[2].score
+            const set4Score = playerData.game.sets[3].score
+            cardBody.children[0].textContent = `${score} (${set1Score}, ${set2Score}, ${set3Score}, ${set4Score})`;
+        }
+    }
+}
+
+function updateTeamRankingPlain(teamRankingData, teamsData) {
+    const teamRanking = document.getElementById('team-ranking-plain');
+    const teams = teamRanking.querySelectorAll(".team-ranking");
+    for (let i = 0; i < Object.keys(teamRankingData).length; i++) { // teams
+        const teamName = Object.keys(teamRankingData)[i];
+        const teamData = teamsData.find(team => team.name === teamName);
+        const players = teamRankingData[teamName];
+        const currentTeam = teams[i];
+        for (let j = 0; j < players.length; j++) { // players
+            const playerRow = currentTeam.querySelectorAll(".row")[j]
+            const player = players[j];
+            const playerData = teamData.players.find(p => p.completeName === player);
+            const nameAndPlace = playerRow.children[0];
+            nameAndPlace.textContent = `${j + 1}. ${playerData.completeName}`;
+            const club = playerRow.children[1];
+            club.textContent = playerData.club
+            const score = playerRow.children[2]
+            score.textContent = playerData.game.totalScore
         }
     }
 }

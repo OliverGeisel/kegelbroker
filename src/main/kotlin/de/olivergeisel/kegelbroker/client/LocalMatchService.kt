@@ -72,6 +72,13 @@ class LocalMatchService(private val applicationProperties: ApplicationProperties
 		throw IllegalArgumentException("Match $matchName not found")
 	}
 
+	fun reloadMatch(matchName: String) {
+		val match = liveMatchRepository.findByMatchName(matchName)
+		if (match != null) {
+			cache.getCache("matches")?.put(matchName, MatchUpdater(getMatchFromDisk(match.date, match.matchDir)))
+		}
+	}
+
 	fun getMatchFromDisk(date: LocalDate, matchName: String): Match<Game120> {
 		val dateFormatted = date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
 		val dayDir = loadDatePath().resolve(dateFormatted)

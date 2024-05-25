@@ -87,6 +87,10 @@ class LandingController(
 			"update" -> {
 				match.get().static = false
 			}
+			"reload" -> {
+				val matchName = match.get().matchName
+				localMatchService.reloadMatch(matchName)
+			}
 
 			"delete" -> {
 				localMatchService.deleteMatch(match.get())
