@@ -15,29 +15,24 @@
  */
 package de.olivergeisel.kegelbroker
 
-import org.springframework.messaging.handler.annotation.MessageMapping
-import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.util.HtmlUtils
 
 @Controller
 class WebSocketController {
+	/*
+		@GetMapping("/ws")
+		fun ws(): String {
+			return "ws"
+		}
 
-	@GetMapping("/ws")
-	fun ws(): String {
-		return "ws"
-	}
-
-	@MessageMapping("/hello")
-	@SendTo("/ws-response/greetings")
-	@ResponseBody
-	fun greeting(name: Greeting): Message {
-		Thread.sleep(1000) // simulated delay
-		val t = Message("Hello, ${HtmlUtils.htmlEscape(name.name)}!")
-		return t
-	}
+		@MessageMapping("/hello")
+		@SendTo("/ws-response/greetings")
+		@ResponseBody
+		fun greeting(name: Greeting): Message {
+			Thread.sleep(1000) // simulated delay
+			val t = Message("Hello, ${HtmlUtils.htmlEscape(name.name)}!")
+			return t
+		}*/
 }
 
 data class Message(val name: String) {

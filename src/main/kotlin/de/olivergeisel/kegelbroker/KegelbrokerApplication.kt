@@ -35,6 +35,7 @@ class SecurityConfig : WebMvcConfigurer {
 
 		http.csrf { it.disable() }
 		http.authorizeHttpRequests { it.anyRequest().permitAll() }
+		http.headers { it.frameOptions { it2 -> it2.disable() } }
 		http.formLogin { }
 		http.cors { }
 		http.logout { it.logoutSuccessUrl("/").clearAuthentication(true).deleteCookies("JSESSIONID") }
