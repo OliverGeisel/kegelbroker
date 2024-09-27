@@ -17,10 +17,10 @@ class MatchFlattener<T : Game> {
 	 * @param match the match to flatten
 	 * @return the flattened match
 	 */
-	fun flat(match: Match<T>): MatchFlat <T>{
+	fun <G : Game> flat(match: Match<G>): MatchFlat <G>{
 		val matchStatusInfo = match.statusInfo
 		// flat teams
-		val teams = LinkedList<TeamFlat<T>>()
+		val teams = LinkedList<TeamFlat<G>>()
 		for (team in match.teams) {
 			val flatTeam = TeamFlat(team)
 			teams.add(flatTeam)

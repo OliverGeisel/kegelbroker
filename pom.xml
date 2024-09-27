@@ -5,19 +5,21 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>3.3.4</version>
+        <relativePath/>
     </parent>
     <groupId>de.olivergeisel</groupId>
     <artifactId>kegelbroker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Kegelbroker</name>
     <description>kegelbroker</description>
+
     <properties>
         <java.version>21</java.version>
         <kotlin.version>1.9.22</kotlin.version>
         <fasterxml.jackson.version>2.17.1</fasterxml.jackson.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -35,11 +37,19 @@
             <groupId>de.kegelplay</groupId>
             <artifactId>core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
-        </dependency><dependency>
+        </dependency>
+        <dependency>
+            <groupId>de.kegelplay</groupId>
+            <artifactId>infrastructure</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>de.kegelplay</groupId>
             <artifactId>application</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+
+
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
@@ -118,12 +128,20 @@
         </dependency>
 
 
-
-
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>0.52</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>htmx.org</artifactId>
+            <version>2.0.0</version>
+        </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>5.3.2</version>
+            <version>5.3.3</version>
         </dependency>
     </dependencies>
 

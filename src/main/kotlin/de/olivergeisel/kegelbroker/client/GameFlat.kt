@@ -7,10 +7,10 @@ import core.game.GameSet
 import core.team_and_player.Player
 import java.time.LocalDateTime
 
-class GameFlat(game: Game):Game(null){
+class GameFlat(game: Game) : Game(null) {
 
 	private var date = game.date
-	private var player = game.currentPlayer.completeName
+	private var playerName = game.currentPlayer.completeName
 	private var sets = game.sets
 	var info = game.gameInfo
 	var kind = game.gameKind
@@ -28,9 +28,10 @@ class GameFlat(game: Game):Game(null){
 	}
 
 	override fun setPlayer(p0: Player<Game>?) {
-		TODO("Not yet implemented")
+		if (p0 != null) {
+			playerName = p0.completeName
+		}
 	}
-
 
 
 	override fun start() {
