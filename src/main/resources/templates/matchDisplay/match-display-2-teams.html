@@ -208,15 +208,15 @@
 
     function teamTableUpdate(data, id) {
         const team = document.getElementById(id)
-        const table = team.querySelector('table')
+        const table = team.querySelector('tbody')
         const rows = table.querySelectorAll('tr')
-        const footer = rows[rows.length - 1]
+        const footer = team.querySelector('tfoot')
         for (let i = 0; i < data.players.length; i++) {
             const player = data.players[i]
             const game = player.game
             const row = rows[i]
             const cells = row.querySelectorAll('td')
-            cells[0].innerText = player.name
+            cells[0].innerText = player.completeName
             cells[1].innerText = game.numberOfWurf
             cells[2].innerText = game.totalVolle
             cells[3].innerText = game.totalAbraeumen
@@ -236,15 +236,15 @@
 
     function teamTableUpdateReverse(data, id) {
         const team = document.getElementById(`${id}-reverse`)
-        const table = team.querySelector('table')
+        const table = team.querySelector('tbody')
         const rows = table.querySelectorAll('tr')
-        const footer = rows[rows.length - 1]
+        const footer = team.querySelector('tfoot')
         for (let i = 0; i < data.players.length; i++) {
             const player = data.players[i]
             const game = player.game
             const row = rows[i]
             const cells = row.querySelectorAll('td')
-            cells[5].innerText = player.name
+            cells[5].innerText = player.completeName
             cells[4].innerText = game.numberOfWurf
             cells[3].innerText = game.totalVolle
             cells[2].innerText = game.totalAbraeumen
