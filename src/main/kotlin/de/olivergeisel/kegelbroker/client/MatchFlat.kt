@@ -14,6 +14,7 @@ class MatchFlat<G : Game>(match: Match<G>, val teams: List<TeamFlat<G>>, val ext
 ) {
 
 	var finished = match.statusInfo.isFinished
+	var final = match.statusInfo.isFinished || match.statusInfo.isAborted
 
 	override fun getTeams(): Array<out Team<GameFlat>> {
 		return teams.toTypedArray()

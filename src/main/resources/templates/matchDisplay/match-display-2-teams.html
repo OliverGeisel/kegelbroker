@@ -10,7 +10,7 @@
 <main class="container-fluid">
     <div th:replace="~{matchDisplay/basic-match-fragments :: alpha-info}"></div>
     <!--/*@thymesVar id="match" type="core.match.Match2Teams"*/-->
-    <section>
+    <section id="normal">
         <header>
             <h2 class="centering text-center pb-3">Teams</h2>
         </header>
@@ -99,7 +99,7 @@
         </article>
     </section>
     <hr>
-    <section>
+    <section id="reverse">
         <header>
             <h2 class="centering text-center pb-3">Teams</h2>
         </header>
@@ -204,6 +204,7 @@
         <div class="alert alert-danger" hidden id="connection-status"></div>
     </section>
 </main>
+<footer th:replace="~{main-templates::footer}"/>
 <script th:inline="javascript">
 
     function teamTableUpdate(data, id) {
@@ -261,7 +262,7 @@
     }
 
     async function refresh() {
-        const id = /*[[${id}]]*/""
+        const id = /*[[${matchName}]]*/""
         let data;
         try {
             const response = await fetch(`/live/get-match?matchId=${id}`);
@@ -287,7 +288,7 @@
         state.innerText = ''
         state.hidden = true
         const start = Date.now();
-        if (data.finished) { // Match finished
+        if (data.final) { // Match finished
             stopUpdate()
             const group = document.getElementById('refresh-button-group')
             group.childNodes.forEach(node => node.disabled = true)
