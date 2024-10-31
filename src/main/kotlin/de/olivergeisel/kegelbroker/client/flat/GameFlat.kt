@@ -1,4 +1,4 @@
-package de.olivergeisel.kegelbroker.client
+package de.olivergeisel.kegelbroker.client.flat
 
 import core.game.Game
 import core.game.GameInfo

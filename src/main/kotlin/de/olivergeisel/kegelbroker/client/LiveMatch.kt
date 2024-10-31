@@ -3,7 +3,6 @@ package de.olivergeisel.kegelbroker.client
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.util.*
-import kotlin.io.path.Path
 
 /**
  * Entity to represent a Match, that is hosted on the application
@@ -39,7 +38,7 @@ class LiveMatch(
 	 */
 	var running: Boolean = true,
 	/**
-	 * Static state of the match. It will not change its state anymore
+	 * Static state of the match. It will not change its state anymore (no updates)
 	 */
 	var static :Boolean = false
 
@@ -52,8 +51,8 @@ class LiveMatch(
 	@ElementCollection
 	var teams: List<String> = LinkedList<String>()
 
-	private fun LiveMatch() {
-
+	protected fun LiveMatch() {
+		// for JPA
 	}
 
 	fun getTeamsAsString(): String{
@@ -78,6 +77,14 @@ class LiveMatch(
 
 	fun setUpdating(){
 		static = false
+	}
+
+	/**
+	 * Checks if the macht is completed (not running)
+	 * @return True if the state of the match is enden or aborted
+	 */
+	fun isEnded(): Boolean {
+		return !running
 	}
 
 }

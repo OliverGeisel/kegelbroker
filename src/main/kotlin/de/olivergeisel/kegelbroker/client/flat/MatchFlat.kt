@@ -1,4 +1,4 @@
-package de.olivergeisel.kegelbroker.client
+package de.olivergeisel.kegelbroker.client.flat
 
 import core.game.Game
 import core.match.Match
@@ -16,6 +16,7 @@ class MatchFlat<G : Game>(match: Match<G>, val teams: List<TeamFlat<G>>, val ext
 	var finished = match.statusInfo.isFinished
 	var final = match.statusInfo.isFinished || match.statusInfo.isAborted
 	private var points: Map<String, Double> = match.points
+	private var setPoints: MutableMap<String, Double> = match.setPoints
 
 	override fun getTeams(): Array<out Team<GameFlat>> {
 		return teams.toTypedArray()
@@ -27,6 +28,10 @@ class MatchFlat<G : Game>(match: Match<G>, val teams: List<TeamFlat<G>>, val ext
 
 	override fun getPoints(): Map<String, Double> {
 		return points
+	}
+
+	override fun getSetPoints(): MutableMap<String, Double> {
+		return setPoints
 	}
 
 	override fun getCurrentPlayers(): MutableList<Player<GameFlat>> {

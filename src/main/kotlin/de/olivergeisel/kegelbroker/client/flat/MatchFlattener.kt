@@ -1,4 +1,4 @@
-package de.olivergeisel.kegelbroker.client
+package de.olivergeisel.kegelbroker.client.flat
 
 import core.game.Game
 import core.match.Match
@@ -8,16 +8,22 @@ import java.util.*
 
 /**
  * This class is used to flatten a {@link Match} for json representation.
+ *
+ * @author Oliver Geisel
+ * @see Match
+ * @version 1.0.0
+ * @since 1.0.0
  */
 @Service
 class MatchFlattener<T : Game> {
 
+	// TODO change to builder or Factory
 	/**
 	 * Flattens a {@link Match} for json representation.
 	 * @param match the match to flatten
 	 * @return the flattened match
 	 */
-	fun <G : Game> flat(match: Match<G>): MatchFlat <G>{
+	fun <G : Game> flat(match: Match<G>): MatchFlat<G> {
 		val matchStatusInfo = match.statusInfo
 		// flat teams
 		val teams = LinkedList<TeamFlat<G>>()
