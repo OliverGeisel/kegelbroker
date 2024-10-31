@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @Controller
@@ -46,8 +47,9 @@ public class MatchDisplayController {
 	}
 
 	@GetMapping({"", "/"})
-	public String overview(Model model) {
-		var matchesToday = localMatchService.getAllMatchesToday();
+	public String overview(@RequestParam(required = false, value = "day") LocalDate day, Model model) {
+		var matchesToday =
+				day == null ? localMatchService.getAllMatchesToday() : localMatchService.getAllMatchesOf(day);
 		model.addAttribute("liveMatches", matchesToday.filter(LiveMatch::getRunning));
 		model.addAttribute("completedMatches", matchesToday.filter(it -> !it.getRunning() || it.getStatic()));
 		model.addAttribute("templates", templates.keySet());
@@ -84,7 +86,7 @@ public class MatchDisplayController {
 		}
 		var correctMatch = localMatchService.getMatchCached(matchId);
 		model.addAttribute("match", correctMatch);
-		model.addAttribute("matchName",matchId);
+		model.addAttribute("matchName", matchId);
 		return STR."\{templateDir}\{template}";// "matchDisplay";
 	}
 

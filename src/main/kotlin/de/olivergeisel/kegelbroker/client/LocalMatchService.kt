@@ -1,13 +1,12 @@
 package de.olivergeisel.kegelbroker.client
 
+
 import core.game.Game120
 import core.match.Match
 import core.point_system._2Teams120PointSystem
-import de.olivergeisel.kegelbroker.ApplicationProperties
 import de.kegelplay.infrastructure.data_reader.KeglerheimGeneralReader
 import de.kegelplay.infrastructure.update.MatchUpdater
-
-
+import de.olivergeisel.kegelbroker.ApplicationProperties
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.CacheManager
@@ -21,8 +20,6 @@ import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Formatter
-import kotlin.io.path.Path
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
@@ -49,6 +46,10 @@ class LocalMatchService(
 
 	fun getAllMatchesToday():Streamable<LiveMatch>{
 		return liveMatchRepository.findAllByDate(LocalDate.now())
+	}
+
+	fun getAllMatchesOf(day: LocalDate): Streamable<LiveMatch> {
+		return liveMatchRepository.findAllByDate(day)
 	}
 
 

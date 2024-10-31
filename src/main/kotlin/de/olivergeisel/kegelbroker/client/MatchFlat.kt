@@ -15,6 +15,7 @@ class MatchFlat<G : Game>(match: Match<G>, val teams: List<TeamFlat<G>>, val ext
 
 	var finished = match.statusInfo.isFinished
 	var final = match.statusInfo.isFinished || match.statusInfo.isAborted
+	private var points: Map<String, Double> = match.points
 
 	override fun getTeams(): Array<out Team<GameFlat>> {
 		return teams.toTypedArray()
@@ -24,10 +25,15 @@ class MatchFlat<G : Game>(match: Match<G>, val teams: List<TeamFlat<G>>, val ext
 		return emptyList<GameFlat>().toMutableList()
 	}
 
+	override fun getPoints(): Map<String, Double> {
+		return points
+	}
+
 	override fun getCurrentPlayers(): MutableList<Player<GameFlat>> {
-		var players =  super.getCurrentPlayers();
+		val players = super.getCurrentPlayers();
 		players.forEach{it.game=null}
 		return players
 	}
+
 
 }
