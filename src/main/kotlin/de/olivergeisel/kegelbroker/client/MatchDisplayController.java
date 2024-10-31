@@ -3,10 +3,11 @@ package de.olivergeisel.kegelbroker.client;
 import core.game.Game;
 import core.game.GameKind;
 import core.match.Match;
-import de.olivergeisel.kegelbroker.ApplicationProperties;
+import de.olivergeisel.kegelbroker.client.flat.GameFlat;
+import de.olivergeisel.kegelbroker.client.flat.MatchFlat;
+import de.olivergeisel.kegelbroker.client.flat.MatchFlattener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +31,6 @@ public class MatchDisplayController {
 	private final LiveMatchRepository            liveMatchRepository;
 	private final MatchFlattener<? extends Game> matchFlattener;
 	private final LocalMatchService              localMatchService;
-
-	@Autowired
-	ApplicationProperties applicationProperties;
 
 	public MatchDisplayController(LiveMatchRepository liveMatchRepository, MatchFlattener<Game> matchFlattener,
 			LocalMatchService localMatchService) {
