@@ -41,7 +41,7 @@
                                 <td th:text="${game.getDurchgang(3).score}">XYZ</td>
                                 <td th:text="${game.totalScore}">0</td>
                                 <td th:text="${match.setPoints[player.completeName]}">0</td>
-                                <td th:text="${match.points[player.completeName()]}"></td>
+                                <td th:text="${match.points[player.completeName]}"></td>
                             </tr>
                             </tbody>
                             <tfoot class="fw-bold text-center">
@@ -50,10 +50,11 @@
                                 <td th:text="${team.teamTotalVolle}">XYZ</td>
                                 <td>Abräumen:</td>
                                 <td th:text="${team.teamTotalAbraeumen}">ABC</td>
+                                <td>Gesamt:</td>
                                 <td th:text="${team.teamScore}">587</td>
                                 <td th:text="${match.setPoints[team.name]}">587</td>
-                                <td>Punkte:</td>
                                 <td th:text="${match.points[team.name]}"></td>
+                                <td></td>
                             </tr>
                             </tfoot>
                         </table>
@@ -89,7 +90,7 @@
                                 <td th:text="${game.getDurchgang(3).score}">XYZ</td>
                                 <td th:text="${game.totalScore}">0</td>
                                 <td th:text="${match.setPoints[player.completeName]}">0</td>
-                                <td th:text="${match.points[player.completeName()]}"></td>
+                                <td th:text="${match.points[player.completeName]}"></td>
                             </tr>
                             </tbody>
                             <tfoot class="fw-bold text-center">
@@ -98,10 +99,11 @@
                                 <td th:text="${team.teamTotalVolle}">XYZ</td>
                                 <td>Abräumen:</td>
                                 <td th:text="${team.teamTotalAbraeumen}">ABC</td>
+                                <td>Gesamt:</td>
                                 <td th:text="${team.teamScore}">587</td>
                                 <td th:text="${match.setPoints[team.name]}">587</td>
-                                <td>Punkte:</td>
                                 <td th:text="${match.points[team.name]}"></td>
+                                <td></td>
                             </tr>
                             </tfoot>
                         </table>
@@ -148,13 +150,14 @@
                             <tfoot class="fw-bold text-center">
                             <tr>
                                 <td th:text="${match.points[team.name]}"></td>
-                                <td>:Punkte</td>
                                 <td th:text="${match.setPoints[team.name]}">587</td>
                                 <td th:text="${team.teamScore}"></td>
+                                <td>:Gesamt</td>
                                 <td th:text="${team.teamTotalAbraeumen}">ABC</td>
                                 <td>:Abräumen</td>
                                 <td th:text="${team.teamTotalVolle}">XYZ</td>
                                 <td>:Volle</td>
+                                <td></td>
                             </tr>
                             </tfoot>
                         </table>
@@ -196,13 +199,14 @@
                             <tfoot class="fw-bold text-center">
                             <tr>
                                 <td th:text="${match.points[team.name]}"></td>
-                                <td>:Punkte</td>
                                 <td th:text="${match.setPoints[team.name]}">587</td>
                                 <td th:text="${team.teamScore}"></td>
+                                <td>:Gesamt</td>
                                 <td th:text="${team.teamTotalAbraeumen}">ABC</td>
                                 <td>:Abräumen</td>
                                 <td th:text="${team.teamTotalVolle}">XYZ</td>
                                 <td>:Volle</td>
+                                <td></td>
                             </tr>
                             </tfoot>
                         </table>
@@ -254,8 +258,8 @@
         const footerCells = footer.querySelectorAll('td')
         footerCells[1].innerText = data.teamTotalVolle
         footerCells[3].innerText = data.teamTotalAbraeumen
-        footerCells[4].innerText = data.teamScore
-        footerCells[5].innerText = pointsSet[data.name]
+        footerCells[5].innerText = data.teamScore
+        footerCells[6].innerText = pointsSet[data.name]
         footerCells[7].innerText = points[data.name]
 
         teamTableUpdateReverse(data, id, points, pointsSet)
@@ -283,8 +287,8 @@
         // Update footer row
         const footerCells = footer.querySelectorAll('td')
         footerCells[0].innerText = points[data.name]
-        footerCells[2].innerText = pointsSets[team.name]
-        footerCells[3].innerText = data.teamTotalScore
+        footerCells[1].innerText = pointsSets[data.name]
+        footerCells[2].innerText = data.teamScore
         footerCells[4].innerText = data.teamTotalAbraeumen
         footerCells[6].innerText = data.teamTotalVolle
     }

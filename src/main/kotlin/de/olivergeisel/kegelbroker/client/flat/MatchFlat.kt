@@ -14,7 +14,7 @@ class MatchFlat<G : Game>(match: Match<G>, val teams: List<TeamFlat<G>>, val ext
 ) {
 
 	var finished = match.statusInfo.isFinished
-	var final = match.statusInfo.isFinished || match.statusInfo.isAborted
+	var final = match.statusInfo.isFinished
 	private var points: Map<String, Double> = match.points
 	private var setPoints: MutableMap<String, Double> = match.setPoints
 

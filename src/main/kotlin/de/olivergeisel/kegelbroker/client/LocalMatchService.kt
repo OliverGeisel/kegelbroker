@@ -92,7 +92,8 @@ class LocalMatchService(
 			}
 			val end = LocalDateTime.now()
 			LOGGER.logger.info("Match '$matchName' updated in ${Duration.between(start, end).toMillis()} ms")
-			if (updater?.match?.statusInfo?.isFinished!! || updater.match.statusInfo.isAborted) {
+			// Todo check when is it aborted
+			if (updater?.match?.statusInfo?.isFinished!!) {
 				LOGGER.logger.info("Match '$matchName' finished")
 				match.endMatch()
 				liveMatchRepository.save(match)

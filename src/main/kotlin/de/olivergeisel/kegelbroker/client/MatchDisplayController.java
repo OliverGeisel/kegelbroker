@@ -25,7 +25,8 @@ public class MatchDisplayController {
 			MatchType.FINALE, "finale",
 			MatchType.HALBFINALE, "match-display-halbfinale",
 			MatchType.VORLAUF, "match-display-vorlauf",
-			MatchType.TEAMS2_6S_120, "match-display-2-teams"
+			MatchType.TEAMS2_6S_120, "match-display-2-teams",
+			MatchType.TEAMS2_4S_120, "match-display-2-teams-alt1"
 	);
 
 	private final LiveMatchRepository            liveMatchRepository;
