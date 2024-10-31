@@ -1,23 +1,27 @@
 package de.olivergeisel.kegelbroker.client
 
+
 import core.game.Game120
 import core.match.Match
 import core.point_system._2Teams120PointSystem
-import de.olivergeisel.kegelbroker.ApplicationProperties
 import de.kegelplay.infrastructure.data_reader.KeglerheimGeneralReader
 import de.kegelplay.infrastructure.update.MatchUpdater
-
-
+import de.olivergeisel.kegelbroker.ApplicationProperties
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.CacheManager
+import org.springframework.data.util.Streamable
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.io.path.isDirectory
+import kotlin.io.path.name
 
 /**
  * Service for managing local matches
@@ -40,6 +44,14 @@ class LocalMatchService(
 		return Path.of(applicationProperties.dataPath)
 	}
 
+	fun getAllMatchesToday():Streamable<LiveMatch>{
+		return liveMatchRepository.findAllByDate(LocalDate.now())
+	}
+
+	fun getAllMatchesOf(day: LocalDate): Streamable<LiveMatch> {
+		return liveMatchRepository.findAllByDate(day)
+	}
+
 
 	fun getMatchNames(day: LocalDate): List<String> {
 		val dateFormatted = day.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
@@ -52,8 +64,17 @@ class LocalMatchService(
 		require(!liveMatchRepository.existsByMatchName(match.matchName)) {
 			"Match with id ${form.matchName} already exists"
 		}
+		val teamNames = loadTeamNames(match)
+		match.teams = teamNames
 		cache.getCache("matches")?.put(match.matchName, MatchUpdater(getMatchFromDisk(form.matchDate, form.matchId)))
 		liveMatchRepository.save(match)
+	}
+
+	private fun loadTeamNames(match: LiveMatch): List<String> {
+		val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+		val path = Paths.get(applicationProperties.dataPath).resolve(match.date.format(formatter)).resolve(match.matchDir)
+		val teamNamesDir = Files.list(path).filter{it.isDirectory() && it.name!= "Backup-Daten"}.map { it.name }
+		return teamNamesDir.toList()
 	}
 
 	@Scheduled(fixedRate = 5_000)
@@ -70,9 +91,9 @@ class LocalMatchService(
 				continue
 			}
 			val end = LocalDateTime.now()
-			LOGGER.logger.info("Match $matchName updated in ${Duration.between(start, end).toMillis()} ms")
-			if (updater?.match?.statusInfo?.isFinished == true) {
-				LOGGER.logger.info("Match $matchName finished")
+			LOGGER.logger.info("Match '$matchName' updated in ${Duration.between(start, end).toMillis()} ms")
+			if (updater?.match?.statusInfo?.isFinished!! || updater.match.statusInfo.isAborted) {
+				LOGGER.logger.info("Match '$matchName' finished")
 				match.endMatch()
 				liveMatchRepository.save(match)
 			}
@@ -84,7 +105,7 @@ class LocalMatchService(
 		if (updater != null) {
 			return updater.match
 		}
-		throw IllegalArgumentException("Match $matchName not found")
+		throw IllegalArgumentException("Match '$matchName' not found")
 	}
 
 	fun reloadMatch(matchName: String) {
@@ -115,10 +136,13 @@ class LocalMatchService(
 	 * @param match the match to delete
 	 */
 	fun deleteMatch(match: LiveMatch) {
-		val matchOp = liveMatchRepository.findByMatchName(match.matchName)
-		if (matchOp != null) {
-			liveMatchRepository.delete(matchOp)
-			cache.getCache("matches")?.evict(matchOp.matchName)
+		try {
+			val matchOp = liveMatchRepository.findById(match.id!!)
+			liveMatchRepository.delete(matchOp.get())
+			cache.getCache("matches")?.evict(matchOp.get().matchName)
+
+		}catch (_ : java.lang.IllegalArgumentException){
+			LOGGER.logger.warn("Match not found! '$match' was not deleted")
 		}
 	}
 

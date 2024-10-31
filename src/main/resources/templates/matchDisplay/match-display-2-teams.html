@@ -10,7 +10,7 @@
 <main class="container-fluid">
     <div th:replace="~{matchDisplay/basic-match-fragments :: alpha-info}"></div>
     <!--/*@thymesVar id="match" type="core.match.Match2Teams"*/-->
-    <section>
+    <section id="normal">
         <header>
             <h2 class="centering text-center pb-3">Teams</h2>
         </header>
@@ -20,27 +20,29 @@
                     <div>
                         <h3 class="centering text-center" th:text="${team.name}"></h3>
                         <table class="table table-striped">
-                            <thead>
+                            <thead class="text-center align-middle">
                             <tr>
                                 <th>Spieler</th>
                                 <th>Wurf</th>
                                 <th>Volle</th>
-                                <th>Räumer</th>
+                                <th>R</th>
                                 <th>Gesamt</th>
                                 <th>Fw</th>
+                                <th>P</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-center align-middle">
                             <tr th:each="player : ${team.players}" th:with="game=${player.game}">
                                 <td th:text="${player.completeName}">Max Mustermann</td>
                                 <td th:text="${game.numberOfWurf}">120</td>
                                 <td th:text="${game.totalVolle}">XYZ</td>
-                                <td th:text="${game.totalAbraeumen}">ABC</td>
-                                <td th:text="${game.totalScore}">587</td>
+                                <td class="align-content-center" th:text="${game.totalAbraeumen}">ABC</td>
+                                <td class="align-content-center" th:text="${game.totalScore}">587</td>
                                 <td th:text="${game.totalFehlwurf}">0</td>
+                                <td th:text="${match.points[player.getCompleteName()]}"></td>
                             </tr>
                             </tbody>
-                            <tfoot>
+                            <tfoot class="fw-bold text-center">
                             <tr>
                                 <td></td>
                                 <td th:text="${team.teamTotalThrows}"></td>
@@ -48,6 +50,7 @@
                                 <td th:text="${team.teamTotalAbraeumen}">ABC</td>
                                 <td th:text="${team.teamScore}">587</td>
                                 <td th:text="${team.teamTotalMissThrow}">0</td>
+                                <td th:text="${match.points[team.name]}"></td>
                             </tr>
                             </tfoot>
                         </table>
@@ -62,17 +65,18 @@
                     <div>
                         <h3 class="centering text-center" th:text="${team.name}"></h3>
                         <table class="table table-striped">
-                            <thead>
+                            <thead class="text-center align-middle">
                             <tr>
                                 <th>Spieler</th>
                                 <th>Wurf</th>
                                 <th>Volle</th>
-                                <th>Räumer</th>
+                                <th>R</th>
                                 <th>Gesamt</th>
                                 <th>Fw</th>
+                                <th>P</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-center align-middle">
                             <tr th:each="player :${team.players}" th:with="game=${player.game}">
                                 <td th:text="${player.completeName}">Max Mustermann</td>
                                 <td th:text="${game.numberOfWurf}">120</td>
@@ -80,9 +84,10 @@
                                 <td th:text="${game.totalAbraeumen}">ABC</td>
                                 <td th:text="${game.totalScore}">587</td>
                                 <td th:text="${game.totalFehlwurf}">0</td>
+                                <td th:text="${match.points[player.getCompleteName()]}"></td>
                             </tr>
                             </tbody>
-                            <tfoot>
+                            <tfoot class="fw-bold text-center">
                             <tr>
                                 <td></td>
                                 <td th:text="${team.getTeamTotalThrows()}"></td>
@@ -90,6 +95,7 @@
                                 <td th:text="${team.teamTotalAbraeumen}">ABC</td>
                                 <td th:text="${team.teamScore}">587</td>
                                 <td th:text="${team.teamTotalMissThrow}">0</td>
+                                <td th:text="${match.points[team.name]}"></td>
                             </tr>
                             </tfoot>
                         </table>
@@ -99,9 +105,9 @@
         </article>
     </section>
     <hr>
-    <section>
+    <section id="reverse">
         <header>
-            <h2 class="centering text-center pb-3">Teams</h2>
+            <h2 class="centering text-center pb-3">Teams umgekehrt</h2>
         </header>
         <article id="team-1-reverse">
             <div class="row pt-3">
@@ -109,18 +115,20 @@
                     <div>
                         <h3 class="centering text-center" th:text="${team.name}"></h3>
                         <table class="table table-striped">
-                            <thead>
+                            <thead class="text-center align-middle">
                             <tr>
+                                <th>P</th>
                                 <th>Fw</th>
                                 <th>Gesamt</th>
-                                <th>Räumer</th>
+                                <th>R</th>
                                 <th>Volle</th>
                                 <th>Wurf</th>
                                 <th>Spieler</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-center align-middle">
                             <tr th:each="player :${team.players}" th:with="game=${player.game}">
+                                <td th:text="${match.points[player.getCompleteName()]}"></td>
                                 <td th:text="${game.totalFehlwurf}">0</td>
                                 <td th:text="${game.totalScore}">587</td>
                                 <td th:text="${game.totalAbraeumen}">ABC</td>
@@ -129,8 +137,9 @@
                                 <td th:text="${player.completeName}">Max Mustermann</td>
                             </tr>
                             </tbody>
-                            <tfoot>
+                            <tfoot class="fw-bold text-center">
                             <tr>
+                                <td th:text="${match.points[team.name]}"></td>
                                 <td th:text="${team.teamTotalMissThrow}">0</td>
                                 <td th:text="${team.teamScore}">587</td>
                                 <td th:text="${team.teamTotalAbraeumen}">ABC</td>
@@ -151,18 +160,20 @@
                     <div>
                         <h3 class="centering text-center" th:text="${team.name}"></h3>
                         <table class="table table-striped">
-                            <thead>
+                            <thead class="text-center align-middle">
                             <tr>
+                                <th>P</th>
                                 <th>Fw</th>
                                 <th>Gesamt</th>
-                                <th>Räumer</th>
+                                <th>R</th>
                                 <th>Volle</th>
                                 <th>Wurf</th>
                                 <th>Spieler</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-center align-middle">
                             <tr th:each="player :${team.players}" th:with="game=${player.game}">
+                                <td th:text="${match.points[player.getCompleteName()]}"></td>
                                 <td th:text="${game.totalFehlwurf}">0</td>
                                 <td th:text="${game.totalScore}">587</td>
                                 <td th:text="${game.totalAbraeumen}">ABC</td>
@@ -171,8 +182,9 @@
                                 <td th:text="${player.completeName}">Max Mustermann</td>
                             </tr>
                             </tbody>
-                            <tfoot>
+                            <tfoot class="fw-bold text-center">
                             <tr>
+                                <td th:text="${match.points[team.name]}"></td>
                                 <td th:text="${team.teamTotalMissThrow}">0</td>
                                 <td th:text="${team.teamScore}">587</td>
                                 <td th:text="${team.teamTotalAbraeumen}">ABC</td>
@@ -188,10 +200,10 @@
         </article>
     </section>
     <hr>
-    <section class="pb-1">
+    <section class="pb-1 pt-1">
         <form class="form-control p-2" method="dialog">
             <label for="interval">Aktualisierungsintervall in Sekunden</label>
-            <input class="number-button" id="interval" min="5" step="1" type="number" value="5">
+            <input class="number-button col-2" id="interval" min="5" step="1" type="number" value="5">
             <div class="btn-group pt-1" id="refresh-button-group">
                 <button class="btn btn-primary pt-1" onclick="updateInterval()" type="button">Aktualisieren</button>
                 <button class="btn btn-warning pt-1" onclick="refresh()" type="button">Manuell aktualisieren</button>
@@ -204,9 +216,10 @@
         <div class="alert alert-danger" hidden id="connection-status"></div>
     </section>
 </main>
+<footer th:replace="~{main-templates::footer}"/>
 <script th:inline="javascript">
 
-    function teamTableUpdate(data, id) {
+    function teamTableUpdate(data, id, points) {
         const team = document.getElementById(id)
         const table = team.querySelector('tbody')
         const rows = table.querySelectorAll('tr')
@@ -222,6 +235,7 @@
             cells[3].innerText = game.totalAbraeumen
             cells[4].innerText = game.totalScore
             cells[5].innerText = game.totalFehlwurf
+            cells[6].innerText = points[player.completeName]
         }
         // Update footer row
         const footerCells = footer.querySelectorAll('td')
@@ -230,11 +244,12 @@
         footerCells[3].innerText = data.teamTotalAbraeumen
         footerCells[4].innerText = data.teamScore
         footerCells[5].innerText = data.teamTotalMissThrow
+        footerCells[6].innerText = points[data.name]
 
-        teamTableUpdateReverse(data, id)
+        teamTableUpdateReverse(data, id, points)
     }
 
-    function teamTableUpdateReverse(data, id) {
+    function teamTableUpdateReverse(data, id, points) {
         const team = document.getElementById(`${id}-reverse`)
         const table = team.querySelector('tbody')
         const rows = table.querySelectorAll('tr')
@@ -244,24 +259,26 @@
             const game = player.game
             const row = rows[i]
             const cells = row.querySelectorAll('td')
-            cells[5].innerText = player.completeName
-            cells[4].innerText = game.numberOfWurf
-            cells[3].innerText = game.totalVolle
-            cells[2].innerText = game.totalAbraeumen
-            cells[1].innerText = game.totalScore
-            cells[0].innerText = game.totalFehlwurf
+            cells[6].innerText = player.completeName
+            cells[5].innerText = game.numberOfWurf
+            cells[4].innerText = game.totalVolle
+            cells[3].innerText = game.totalAbraeumen
+            cells[2].innerText = game.totalScore
+            cells[1].innerText = game.totalFehlwurf
+            cells[0].innerText = points[player.completeName]
         }
         // Update footer row
         const footerCells = footer.querySelectorAll('td')
-        footerCells[4].innerText = data.teamTotalThrows
-        footerCells[3].innerText = data.teamTotalVolle
-        footerCells[2].innerText = data.teamTotalAbraeumen
-        footerCells[1].innerText = data.teamScore
-        footerCells[0].innerText = data.teamTotalMissThrow
+        footerCells[5].innerText = data.teamTotalThrows
+        footerCells[4].innerText = data.teamTotalVolle
+        footerCells[3].innerText = data.teamTotalAbraeumen
+        footerCells[2].innerText = data.teamScore
+        footerCells[1].innerText = data.teamTotalMissThrow
+        footerCells[0].innerText = points[data.name]
     }
 
     async function refresh() {
-        const id = /*[[${id}]]*/""
+        const id = /*[[${matchName}]]*/""
         let data;
         try {
             const response = await fetch(`/live/get-match?matchId=${id}`);
@@ -287,19 +304,20 @@
         state.innerText = ''
         state.hidden = true
         const start = Date.now();
-        if (data.finished) { // Match finished
+        if (data.final) { // Match finished
             stopUpdate()
             const group = document.getElementById('refresh-button-group')
             group.childNodes.forEach(node => node.disabled = true)
             state.hidden = false
             state.classList.add('alert-success')
+            state.classList.add('mt-1')
             state.classList.remove('alert-danger')
             state.innerText = 'Match finished'
         }
         const home = data.teams[0]
         const guest = data.teams[1]
-        teamTableUpdate(home, 'home-team')
-        teamTableUpdate(guest, 'guest-team')
+        teamTableUpdate(home, 'home-team', data.points)
+        teamTableUpdate(guest, 'guest-team', data.points)
         const end = Date.now()
         console.log(`Refresh took ${end - start} ms`)
     }

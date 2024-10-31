@@ -35,20 +35,9 @@
         </dependency>
         <dependency>
             <groupId>de.kegelplay</groupId>
-            <artifactId>core</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>de.kegelplay</groupId>
             <artifactId>infrastructure</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>de.kegelplay</groupId>
-            <artifactId>application</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-
 
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>

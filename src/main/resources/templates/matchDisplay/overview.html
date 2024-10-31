@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Matches von heute</title>
+  <th:block th:replace="~{main-templates::head-default}"></th:block>
+</head>
+<body>
+  <main class="container-fluid">
+    <div th:replace="~{main-templates :: navigation}"></div>
+    <header>
+      <h1 class="">Matches von heute</h1>
+    </header>
+    <section th:if="${liveMatches.isEmpty} and ${completedMatches.empty}">
+      Bisher gibt es keine Spiele. Erstelle ein Spiel!
+    </section>
+    <section class="mb-2">
+      <form th:action="@{/create}">
+        <button class="btn btn-primary">Neues Match live schalten</button>
+      </form>
+    </section>
+    <section th:unless="${liveMatches.empty} and ${completedMatches.empty}">
+      <header>
+        <h3>Laufende Matches</h3>
+      </header>
+      <article>
+        <div th:if="${liveMatches.empty}">
+          Momentan laufen keine Matches!
+        </div>
+        <div class="card-group">
+          <div class="card" th:each="match : ${liveMatches}">
+            <div class="card-header">
+              <span th:remove="tag" th:text="${match.matchName}"></span>
+            </div>
+            <div class="card-body">
+              Es spielen:
+              <h5 class="card-title" th:text="${match.getTeamsAsString}">M1</h5>
+            </div>
+
+            <div class="card-footer">
+              <a class="btn btn-primary" th:href="@{/detail (id=${match.id})}">Details</a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <hr>
+    <section th:unless="${liveMatches.empty} and ${completedMatches.empty}">
+      <header>
+        <h3>Abgeschlossene Matches</h3>
+      </header>
+      <article>
+        <div th:if="${completedMatches.empty}">
+          Bisher sind keine Matches abgeschlossen!
+        </div>
+        <div class="card-group">
+          <div class="card" th:each="match : ${completedMatches}">
+            <div class="card-header">
+              <span th:remove="tag" th:text="${match.matchName}"></span>
+            </div>
+            <div class="card-body">
+              Es spielen:
+              <h5 class="card-title" th:text="${match.getTeamsAsString}">M1</h5>
+              <div>
+                <form th:action="@{/live/{id}(id=${match.matchName})}">
+                  <div class="btn-group">
+                    <button th:each="template: ${templates}" class="btn btn-primary"
+                    th:text="${template}"
+                    name="view" th:value="${template}">
+                      View
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <a class="btn btn-primary" th:href="@{/detail (id=${match.id})}">Details</a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+  <footer th:replace="~{main-templates::footer}"/>
+</body>
+</html>

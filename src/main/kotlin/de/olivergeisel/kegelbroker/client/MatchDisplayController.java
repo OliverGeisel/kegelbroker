@@ -11,12 +11,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/live")
 public class MatchDisplayController {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(MatchDisplayController.class);
-	private static final String templateDir = "matchDisplay/";
+	private final static Logger                 LOGGER      = LoggerFactory.getLogger(MatchDisplayController.class);
+	private static final String                 templateDir = "matchDisplay/";
+	private static final Map<MatchType, String> templates   = Map.of(
+			MatchType.FINALE, "finale",
+			MatchType.HALBFINALE, "match-display-halbfinale",
+			MatchType.VORLAUF, "match-display-vorlauf",
+			MatchType.TEAMS2_6S_120, "match-display-2-teams"
+	);
 
 	private final LiveMatchRepository            liveMatchRepository;
 	private final MatchFlattener<? extends Game> matchFlattener;
@@ -37,6 +46,17 @@ public class MatchDisplayController {
 		return STR."\{templateDir}empty";
 	}
 
+	@GetMapping({"", "/"})
+	public String overview(@RequestParam(required = false, value = "day") LocalDate day, Model model) {
+		var matchesToday =
+				day == null ? localMatchService.getAllMatchesToday() : localMatchService.getAllMatchesOf(day);
+		model.addAttribute("liveMatches", matchesToday.filter(LiveMatch::getRunning));
+		model.addAttribute("completedMatches", matchesToday.filter(it -> !it.getRunning() || it.getStatic()));
+		model.addAttribute("templates", templates.keySet());
+		return STR."\{templateDir}overview";
+	}
+
+
 	/**
 	 * Get a {@link MatchFlat} by id of the {@link LiveMatch}.
 	 *
@@ -56,13 +76,35 @@ public class MatchDisplayController {
 	}
 
 	@GetMapping("{matchId}")
-	public String displayMatch(@PathVariable("matchId") String matchId, Model model) {
-		var match = liveMatchRepository.findByMatchName(matchId);
+	public String displayMatch(@PathVariable("matchId") String matchId, @RequestParam("view") String view,
+			Model model) {
+		var match = liveMatchRepository.findByMatchNameIgnoreCase(matchId);
+		var template = getTemplate(view);
 		if (match == null) {
 			model.addAttribute("error", "Match not found. Nice Try! ;)");
 			return STR."\{templateDir}empty";
 		}
-		return STR."\{templateDir}empty";// "matchDisplay";
+		var correctMatch = localMatchService.getMatchCached(matchId);
+		model.addAttribute("match", correctMatch);
+		model.addAttribute("matchName", matchId);
+		return STR."\{templateDir}\{template}";// "matchDisplay";
+	}
+
+	private String getTemplate(String name) {
+		if (name == null || name.isBlank()) {
+			return "empty";
+		}
+		try {
+			var type = MatchType.valueOf(name);
+			return getTemplate(type);
+		} catch (IllegalArgumentException e) {
+			return "empty";
+		}
+
+	}
+
+	private String getTemplate(MatchType type) {
+		return templates.getOrDefault(type, "empty");
 	}
 
 	@GetMapping("4-against/{matchId}")

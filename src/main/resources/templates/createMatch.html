@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Neues Match</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
+    <th:block th:replace="~{main-templates::head-default}"></th:block>
 </head>
 <body>
 <main class="container">
@@ -16,7 +12,7 @@
         <h1>Neues Match</h1>
     </header>
     <section>
-        <form action="create" method="post">
+        <form action="create" method="post" class="form-control">
             <div class="mb-3">
                 <label for="matchName" class="form-label">Name des Matches</label>
                 <input type="text" class="form-control" id="matchName" name="matchName" placeholder="Name des Matches"
@@ -29,29 +25,29 @@
 
             <div class="mb-3">
                 <label for="matchSelect" class="form-label">Match</label>
-                <select class="p1" id="matchSelect" name="matchId" required>
+                <select class="p1 form-control" id="matchSelect" name="matchId" required>
 
                 </select>
             </div>
             <div class="mb-3">
                 <label for="pointSystem" class="form-label">Punktesystem</label>
-                <select class="p1" id="pointSystem" name="pointSystem" required>
-                    <option th:each="pointSystem : ${pointSystems}" th:value="${pointSystem}"
+                <select class="p1 form-control" id="pointSystem" name="pointSystem" required>
+                    <option class="form-control" th:each="pointSystem : ${pointSystems}" th:value="${pointSystem}"
                             th:text="${pointSystem}" ></option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="server" class="form-label">Server</label>
-                <input class="p1" id="server" name="pointSystem" type="url">
+                <input class="p1 form-control" id="server" name="pointSystem" type="url">
             </div>
             <div class="mb-3">
                 <label for="localServer" class="form-label">Ist lokaler Server?</label>
-                <input type="checkbox" name="localServer" id="localServer" value="false">
+                <input class="p1 form-check-input" type="checkbox" name="localServer" id="localServer" value="false">
             </div>
             <div class="mb-3">
                 <label for="matchType" class="form-label">Matchtyp</label>
-                <select class="p1" id="matchType" name="matchType" required>
-                    <option th:each="matchType : ${matchTypes}" th:value="${matchType}"
+                <select class="p1 form-control" id="matchType" name="matchType" required>
+                    <option class="p1 form-control" th:each="matchType : ${matchTypes}" th:value="${matchType}"
                             th:text="${matchType}" ></option>
                 </select>
             </div>
@@ -82,4 +78,5 @@
     });
 </script>
 </body>
+<footer th:replace="~{main-templates::footer}"/>
 </html>

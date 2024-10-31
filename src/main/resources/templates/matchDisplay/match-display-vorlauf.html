@@ -350,6 +350,7 @@
         <div class="alert alert-danger" hidden id="connection-status"></div>
     </section>
 </main>
+<footer th:replace="~{main-templates::footer}"/>
 <script th:inline="javascript">
 
     window.onload = function () {
@@ -426,7 +427,7 @@
     }
 
     async function refresh() {
-        const id = /*[[${id}]]*/""
+        const id = /*[[${matchName}]]*/""
         let data;
         try {
             const response = await fetch(`/live/get-match?matchId=${id}`);
@@ -452,7 +453,7 @@
         state.innerText = ''
         state.hidden = true
         const start = Date.now();
-        if (data.finished) {
+        if (data.final) {
             stopUpdate()
             const group = document.getElementById('refresh-button-group')
             group.childNodes.forEach(node => node.disabled = true)
