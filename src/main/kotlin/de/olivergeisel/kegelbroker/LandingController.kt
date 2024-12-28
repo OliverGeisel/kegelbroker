@@ -4,6 +4,7 @@ import de.olivergeisel.kegelbroker.client.LiveMatchRepository
 import de.olivergeisel.kegelbroker.client.LocalMatchService
 import de.olivergeisel.kegelbroker.client.MatchCreateForm
 import de.olivergeisel.kegelbroker.client.MatchType
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
@@ -19,7 +20,10 @@ class LandingController(
 	private val localMatchService: LocalMatchService, private val matchRepository: LiveMatchRepository
 ) {
 
-	private val LOGGER = LoggerFactory.getLogger(LandingController::class.java)
+	private object LOGGER {
+		val log: Logger = LoggerFactory.getLogger(LandingController::class.java)
+	}
+
 
 	@GetMapping("/")
 	fun landing(model: Model): String {
@@ -31,6 +35,8 @@ class LandingController(
 	fun createMatch(model: Model): String {
 		model.addAttribute("pointSystems", listOf("2 Teams", "Vorlauf", "Paarweise", "4 gegeneinander"))
 		model.addAttribute("matchTypes", MatchType.entries.toTypedArray())
+		model.addAttribute("matches", localMatchService.getMatchNames(LocalDate.now()))
+		model.addAttribute("date", LocalDate.now())
 		return "createMatch"
 	}
 
@@ -42,14 +48,19 @@ class LandingController(
 
 	@PostMapping("/create")
 	fun createMatch(form: MatchCreateForm): String {
-		LOGGER.info("Start creating match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
+		LOGGER.log.info("Start creating match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
 		try {
-			localMatchService.createMatch(form)
+			localMatchService.createSpecialMatch(form)
 		} catch (e: IllegalArgumentException) {
-			LOGGER.error("Failed to create match ${form.matchId} on ${form.matchDate} with name ${form.matchName}", e)
+			LOGGER.log.error(
+				"Failed to create match ${form.matchId} on ${form.matchDate} with name ${
+					form
+						.matchName
+				}", e
+			)
 			return "redirect:/create"
 		}
-		LOGGER.info("Created match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
+		LOGGER.log.info("Created match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
 		return "redirect:/"
 	}
 

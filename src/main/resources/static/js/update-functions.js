@@ -5,25 +5,58 @@ function updateHeader(player, number) {
     header.children[2].textContent = player.club
 }
 
+function createRow(data, playerNumber, rowsNumber) {
+    const row = document.createElement("tr")
+    row.id = `p${playerNumber}-r${rowsNumber}`
+    const cells = []
+    for (let i = 0; i < 5; i++) {
+        const cell = document.createElement("td")
+        cells.push(cell)
+        row.appendChild(cell)
+    }
+    cells[0].innerHTML = data.anzahlGespielteWuerfe
+    cells[1].innerHTML = data.volleScore
+    cells[2].innerHTML = data.abraeumenScore
+    cells[3].innerHTML = data.score
+    cells[4].innerHTML = data.anzahlFehler
+    return row
+}
 
-function updateTable(game, number) {
-    const row1 = document.getElementById(`p${number}-r1`)
-    const row2 = document.getElementById("p" + number + "-r2")
-    const row3 = document.getElementById("p" + number + "-r3")
-    const row4 = document.getElementById("p" + number + "-r4")
-    const summary = document.getElementById(`p${number}-summary`)
-
+function updateTable(game, number, tbody) {
+    const rows = tbody.querySelectorAll("tr")
     const sets = game.gameSets
+    const rowCount = rows.length
+
+    let back = false
+    if (rowCount !== sets.length) {
+        tbody.innerHTML = ""
+        tbody.appendChild(createRow(sets[0], number, 1))
+        tbody.appendChild(createRow(sets[1], number, 2))
+        if (game.gameSets.length > 2) {
+            tbody.appendChild(createRow(sets[2], number, 3))
+            tbody.appendChild(createRow(sets[3], number, 4))
+        }
+        back = true
+    } else {
+        const row1 = document.getElementById(`p${number}-r1`)
+        const row2 = document.getElementById(`p${number}-r2`)
+        const row3 = document.getElementById(`p${number}-r3`)
+        const row4 = document.getElementById(`p${number}-r4`)
+        back += updateRow(row1, sets[0])
+        back += updateRow(row2, sets[1])
+        if (game.gameSets.length > 2) {
+            back += updateRow(row3, sets[2])
+            back += updateRow(row4, sets[3])
+        }
+    }
+    // write footer
+    const summary = document.getElementById(`p${number}-summary`)
     const sumData = {}
     sumData.anzahlGespielteWuerfe = game.numberOfWurf
     sumData.volleScore = game.totalVolle
     sumData.abraeumenScore = game.totalAbraeumen
     sumData.score = game.totalScore
     sumData.anzahlFehler = game.totalFehlwurf
-    let back = updateRow(row1, sets[0])
-    back += updateRow(row2, sets[1])
-    back += updateRow(row3, sets[2])
-    back += updateRow(row4, sets[3])
     back += updateRow(summary, sumData)
     return back
 }

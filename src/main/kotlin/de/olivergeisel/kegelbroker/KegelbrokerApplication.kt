@@ -33,7 +33,7 @@ class SecurityConfig : WebMvcConfigurer {
 	@Bean
 	fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
 
-		http.csrf { it.disable() }
+		http.csrf { }
 		http.authorizeHttpRequests { it.anyRequest().permitAll() }
 		http.headers { it.frameOptions { it2 -> it2.disable() } }
 		http.formLogin { }

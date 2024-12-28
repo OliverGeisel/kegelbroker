@@ -55,6 +55,18 @@ public class MatchDisplayController {
 		return STR."\{templateDir}overview";
 	}
 
+	@GetMapping("24-hours/{matchId}")
+	public String get24Hours(@PathVariable String matchId, Model model) {
+		var match = liveMatchRepository.findByMatchNameIgnoreCase(matchId);
+		if (match == null) {
+			model.addAttribute("error", "Match not found. Nice Try! ;)");
+			return STR."\{templateDir}empty";
+		}
+		var correctMatch = localMatchService.getMatchCached(matchId);
+		model.addAttribute("match", correctMatch);
+		model.addAttribute("matchName", matchId);
+		return STR."\{templateDir}24-hours";
+	}
 
 	/**
 	 * Get a {@link MatchFlat} by id of the {@link LiveMatch}.

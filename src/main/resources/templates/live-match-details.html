@@ -18,6 +18,7 @@
         Typ: <p th:text="${match.matchType}"></p>
         Läuft: <span th:text="${match.running}"></span>
         <form class="pt-2" method="post">
+            <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
             <input name="id" th:value="${match.id}" type="hidden">
             <button class="btn btn-warning" name="action" th:if="${match.running}" type="submit" value="end">Beenden
                 (Match
