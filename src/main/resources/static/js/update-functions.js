@@ -1,8 +1,8 @@
 function updateHeader(player, number) {
     const header = document.getElementById(`p${number}-header`)
-    header.children[0].textContent = player.vorname
-    header.children[1].textContent = player.nachname
-    header.children[2].textContent = player.club
+    header.children[0].textContent = player.vorname +" "+ player.nachname
+    //header.children[1].textContent = player.nachname
+    //header.children[1].textContent = player.club
 }
 
 function createRow(data, playerNumber, rowsNumber) {
@@ -17,8 +17,8 @@ function createRow(data, playerNumber, rowsNumber) {
     cells[0].innerHTML = data.anzahlGespielteWuerfe
     cells[1].innerHTML = data.volleScore
     cells[2].innerHTML = data.abraeumenScore
-    cells[3].innerHTML = data.score
-    cells[4].innerHTML = data.anzahlFehler
+    cells[3].innerHTML = data.anzahlFehler
+    cells[4].innerHTML = data.score
     return row
 }
 
@@ -69,10 +69,10 @@ function updateRow(row, data) {
     cells[1].innerHTML = data.volleScore
     back += cells[2].innerHTML != data.abraeumenScore
     cells[2].innerHTML = data.abraeumenScore
-    back += cells[3].innerHTML != data.score
-    cells[3].innerHTML = data.score
-    back += cells[4].innerHTML != data.anzahlFehler
-    cells[4].innerHTML = data.anzahlFehler
+    back += cells[3].innerHTML != data.anzahlFehler
+    cells[3].innerHTML = data.anzahlFehler
+    back += cells[4].innerHTML != data.score
+    cells[4].innerHTML = data.score
     return back
 }
 

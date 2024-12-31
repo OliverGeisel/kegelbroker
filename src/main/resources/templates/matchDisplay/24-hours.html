@@ -21,19 +21,17 @@
                      th:id="|lane-${iter.count}|">
                     <h3 th:text="${match.config.laneNames[iter.index]}">Bahn 1</h3>
                     <div th:id="|p${iter.count}-header|">
-                        <h4 th:text="${player.vorname}"></h4>
-                        <h4 th:text="${player.nachname}"></h4>
-                        <h4 th:text="${player.club}"></h4>
+                        <h4 th:text="|${player.vorname} ${player.nachname}|"></h4>
                     </div>
                     <div><!-- Table-->
-                        <table class="table table-striped" th:with="game=${player.game}">
+                        <table class="table table-striped" style="min-height:250px" th:with="game=${player.game}">
                             <thead>
                             <tr>
                                 <th>Wurf</th>
                                 <th>Volle</th>
                                 <th>Räumer</th>
-                                <th>Gesamt</th>
                                 <th>Fw</th>
+                                <th>Gesamt</th>
                             </tr>
                             </thead>
                             <tbody th:remove="all-but-first">
@@ -41,8 +39,8 @@
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
-                                <td th:text="${set.score}">140</td>
                                 <td th:text="${set.anzahlFehler}">0</td>
+                                <td th:text="${set.score}">140</td>
                             </tr>
                             <tr id="p1-r2" th:with="set=${game.getDurchgang(1)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
@@ -300,7 +298,8 @@
                 </div>
             </div>
         </article>
-        <article id="all-results">
+        <article class="mt-2" id="all-results">
+            <h2>Alle Ergebnisse</h2>
             <div class="row" th:each="round,iter : ${match.gameRounds}">
                 <div class="col-12">
                     <h3 class="centering text-center" th:text="|Durchgang ${iter.count}|"></h3>
