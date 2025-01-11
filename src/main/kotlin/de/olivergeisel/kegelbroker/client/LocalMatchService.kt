@@ -142,9 +142,15 @@ class LocalMatchService(
 
 	fun reloadMatch(matchName: String) {
 		val match = liveMatchRepository.findByMatchName(matchName)
-		if (match != null) {
+		if (match == null) {
+			return
+		}
+		if (match.special) {
 			cache.getCache("matches")
 				?.put(matchName, SpecialMatchUpdater(getMatchFromDiskSpecial(match.date, match.matchDir)))
+		} else {
+			cache.getCache("matches")
+				?.put(matchName, MatchUpdater(getMatchFromDisk(match.date, match.matchDir)))
 		}
 	}
 

@@ -46,10 +46,10 @@
                             </tbody>
                             <tfoot class="fw-bold text-center">
                             <tr>
-                                <td>Volle:</td>
-                                <td th:text="${team.teamTotalVolle}">XYZ</td>
-                                <td>Abräumen:</td>
-                                <td th:text="${team.teamTotalAbraeumen}">ABC</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>Gesamt:</td>
                                 <td th:text="${team.teamScore}">587</td>
                                 <td th:text="${match.setPoints[team.name]}">587</td>
@@ -95,10 +95,10 @@
                             </tbody>
                             <tfoot class="fw-bold text-center">
                             <tr>
-                                <td>Volle:</td>
-                                <td th:text="${team.teamTotalVolle}">XYZ</td>
-                                <td>Abräumen:</td>
-                                <td th:text="${team.teamTotalAbraeumen}">ABC</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>Gesamt:</td>
                                 <td th:text="${team.teamScore}">587</td>
                                 <td th:text="${match.setPoints[team.name]}">587</td>
@@ -151,12 +151,12 @@
                             <tr>
                                 <td th:text="${match.points[team.name]}"></td>
                                 <td th:text="${match.setPoints[team.name]}">587</td>
+                                <td>Gesamt:</td>
                                 <td th:text="${team.teamScore}"></td>
-                                <td>:Gesamt</td>
-                                <td th:text="${team.teamTotalAbraeumen}">ABC</td>
-                                <td>:Abräumen</td>
-                                <td th:text="${team.teamTotalVolle}">XYZ</td>
-                                <td>:Volle</td>
+                                <td>/td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                             </tr>
                             </tfoot>
@@ -200,12 +200,12 @@
                             <tr>
                                 <td th:text="${match.points[team.name]}"></td>
                                 <td th:text="${match.setPoints[team.name]}">587</td>
+                                <td>Gesamt:</td>
                                 <td th:text="${team.teamScore}"></td>
-                                <td>:Gesamt</td>
-                                <td th:text="${team.teamTotalAbraeumen}">ABC</td>
-                                <td>:Abräumen</td>
-                                <td th:text="${team.teamTotalVolle}">XYZ</td>
-                                <td>:Volle</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                             </tr>
                             </tfoot>
@@ -246,11 +246,11 @@
             const row = rows[i]
             const cells = row.querySelectorAll('td')
             cells[0].innerText = player.completeName
-            cells[1].innerText = game.sets[0].score
-            cells[2].innerText = game.sets[1].score
-            cells[3].innerText = game.sets[2].score
-            cells[4].innerText = game.sets[3].score
-            cells[5].innerText = game.totalVolle
+            cells[1].innerText = game.gameSets[0].score
+            cells[2].innerText = game.gameSets[1].score
+            cells[3].innerText = game.gameSets[2].score
+            cells[4].innerText = game.gameSets[3].score
+            cells[5].innerText = game.totalScore
             cells[6].innerText = pointsSet[player.completeName]
             cells[7].innerText = points[player.completeName]
         }
@@ -276,10 +276,10 @@
             const row = rows[i]
             const cells = row.querySelectorAll('td')
             cells[7].innerText = player.completeName
-            cells[6].innerText = game.sets[0].score
-            cells[5].innerText = game.sets[1].score
-            cells[4].innerText = game.sets[2].score
-            cells[3].innerText = game.sets[3].score
+            cells[6].innerText = game.gameSets[0].score
+            cells[5].innerText = game.gameSets[1].score
+            cells[4].innerText = game.gameSets[2].score
+            cells[3].innerText = game.gameSets[3].score
             cells[2].innerText = game.totalScore
             cells[1].innerText = pointsSets[player.completeName]
             cells[0].innerText = points[player.completeName]

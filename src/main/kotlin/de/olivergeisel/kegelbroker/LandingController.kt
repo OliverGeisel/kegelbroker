@@ -46,16 +46,32 @@ class LandingController(
 		return localMatchService.getMatchNames(date)
 	}
 
-	@PostMapping("/create")
-	fun createMatch(form: MatchCreateForm): String {
-		LOGGER.log.info("Start creating match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
+	@PostMapping("/create-special")
+	fun createMatchSpecial(form: MatchCreateForm): String {
+		LOGGER.log.info("Start creating special match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
 		try {
 			localMatchService.createSpecialMatch(form)
 		} catch (e: IllegalArgumentException) {
 			LOGGER.log.error(
 				"Failed to create match ${form.matchId} on ${form.matchDate} with name ${
-					form
-						.matchName
+					form.matchName
+				}", e
+			)
+			return "redirect:/create"
+		}
+		LOGGER.log.info("Created match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
+		return "redirect:/"
+	}
+
+	@PostMapping("/create")
+	fun createMatch(form: MatchCreateForm): String {
+		LOGGER.log.info("Start creating match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
+		try {
+			localMatchService.createMatch(form)
+		} catch (e: IllegalArgumentException) {
+			LOGGER.log.error(
+				"Failed to create match ${form.matchId} on ${form.matchDate} with name ${
+					form.matchName
 				}", e
 			)
 			return "redirect:/create"

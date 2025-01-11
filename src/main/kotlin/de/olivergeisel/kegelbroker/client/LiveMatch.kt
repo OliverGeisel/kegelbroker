@@ -40,8 +40,9 @@ class LiveMatch(
 	/**
 	 * Static state of the match. It will not change its state anymore (no updates)
 	 */
-	var static :Boolean = false
+	var static: Boolean = false,
 
+	var special: Boolean = false
 ) {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)

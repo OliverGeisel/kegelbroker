@@ -96,10 +96,10 @@ function updateTeamRanking(teamRankingData, teamsData) {
             cardHeader.children[0].textContent = `${j + 1}. ${playerData.completeName}`;
             const cardBody = card.querySelector('.card-body');
             const score = playerData.game.totalScore
-            const set1Score = playerData.game.sets[0].score
-            const set2Score = playerData.game.sets[1].score
-            const set3Score = playerData.game.sets[2].score
-            const set4Score = playerData.game.sets[3].score
+            const set1Score = playerData.game.gameSets[0].score
+            const set2Score = playerData.game.gameSets[1].score
+            const set3Score = playerData.game.gameSets[2].score
+            const set4Score = playerData.game.gameSets[3].score
             cardBody.children[0].textContent = `${score} (${set1Score}, ${set2Score}, ${set3Score}, ${set4Score})`;
         }
     }

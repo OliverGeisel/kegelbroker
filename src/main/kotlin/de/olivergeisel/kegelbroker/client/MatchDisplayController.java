@@ -137,6 +137,7 @@ public class MatchDisplayController {
 		}
 		var correctMatch = localMatchService.getMatchCached(matchId);
 		model.addAttribute("match", correctMatch);
+		model.addAttribute("matchName", correctMatch);
 		model.addAttribute("id", matchId);
 		return STR."\{templateDir}match-display-2-teams";
 	}
