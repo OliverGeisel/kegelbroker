@@ -35,10 +35,10 @@
                             <tbody class="text-center align-middle">
                             <tr th:each="player : ${team.players}" th:with="game=${player.game}">
                                 <td th:text="${player.completeName}">Max Mustermann</td>
-                                <td th:text="${game.getDurchgang(0).score}">120</td>
-                                <td th:text="${game.getDurchgang(1).score}">XYZ</td>
-                                <td th:text="${game.getDurchgang(2).score}">XYZ</td>
-                                <td th:text="${game.getDurchgang(3).score}">XYZ</td>
+                                <td th:text="${game.getGameSet(0).score}">120</td>
+                                <td th:text="${game.getGameSet(1).score}">XYZ</td>
+                                <td th:text="${game.getGameSet(2).score}">XYZ</td>
+                                <td th:text="${game.getGameSet(3).score}">XYZ</td>
                                 <td th:text="${game.totalScore}">0</td>
                                 <td th:text="${match.setPoints[player.completeName]}">0</td>
                                 <td th:text="${match.points[player.completeName]}"></td>
@@ -84,10 +84,10 @@
                             <tbody class="text-center align-middle">
                             <tr th:each="player : ${team.players}" th:with="game=${player.game}">
                                 <td th:text="${player.completeName}">Max Mustermann</td>
-                                <td th:text="${game.getDurchgang(0).score}">120</td>
-                                <td th:text="${game.getDurchgang(1).score}">XYZ</td>
-                                <td th:text="${game.getDurchgang(2).score}">XYZ</td>
-                                <td th:text="${game.getDurchgang(3).score}">XYZ</td>
+                                <td th:text="${game.getGameSet(0).score}">120</td>
+                                <td th:text="${game.getGameSet(1).score}">XYZ</td>
+                                <td th:text="${game.getGameSet(2).score}">XYZ</td>
+                                <td th:text="${game.getGameSet(3).score}">XYZ</td>
                                 <td th:text="${game.totalScore}">0</td>
                                 <td th:text="${match.setPoints[player.completeName]}">0</td>
                                 <td th:text="${match.points[player.completeName]}"></td>
@@ -140,10 +140,10 @@
                                 <td th:text="${match.points[player.completeName]}"></td>
                                 <td th:text="${match.setPoints[player.completeName]}">0</td>
                                 <td th:text="${game.totalScore}">0</td>
-                                <td th:text="${game.getDurchgang(3).score}">0</td>
-                                <td th:text="${game.getDurchgang(2).score}">0</td>
-                                <td th:text="${game.getDurchgang(1).score}">0</td>
-                                <td th:text="${game.getDurchgang(0).score}">0</td>
+                                <td th:text="${game.getGameSet(3).score}">0</td>
+                                <td th:text="${game.getGameSet(2).score}">0</td>
+                                <td th:text="${game.getGameSet(1).score}">0</td>
+                                <td th:text="${game.getGameSet(0).score}">0</td>
                                 <td th:text="${player.completeName}">Max Mustermann</td>
                             </tr>
                             </tbody>
@@ -189,10 +189,10 @@
                                 <td th:text="${match.points[player.completeName]}"></td>
                                 <td th:text="${match.setPoints[player.completeName]}">0</td>
                                 <td th:text="${game.totalScore}">0</td>
-                                <td th:text="${game.getDurchgang(3).score}">0</td>
-                                <td th:text="${game.getDurchgang(2).score}">0</td>
-                                <td th:text="${game.getDurchgang(1).score}">0</td>
-                                <td th:text="${game.getDurchgang(0).score}">0</td>
+                                <td th:text="${game.getGameSet(3).score}">0</td>
+                                <td th:text="${game.getGameSet(2).score}">0</td>
+                                <td th:text="${game.getGameSet(1).score}">0</td>
+                                <td th:text="${game.getGameSet(0).score}">0</td>
                                 <td th:text="${player.completeName}">Max Mustermann</td>
                             </tr>
                             </tbody>

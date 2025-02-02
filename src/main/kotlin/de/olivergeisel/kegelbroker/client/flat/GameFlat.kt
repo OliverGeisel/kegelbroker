@@ -11,7 +11,7 @@ class GameFlat(game: Game) : Game(null) {
 
 	private var date = game.date
 	private var playerName = game.currentPlayer.completeName
-	private var sets = game.sets
+	private var sets = game.gameSets
 	var info = game.gameInfo
 	var kind = game.gameKind
 
@@ -21,6 +21,15 @@ class GameFlat(game: Game) : Game(null) {
 
 	override fun setDate(date: LocalDateTime?) {
 		this.date = date
+	}
+
+	/**
+	 * Returns the number of [GameSet]s of the game.
+	 *
+	 * @return Number of [GameSet]s
+	 */
+	override fun getNumberOfGameSets(): Int {
+		return sets.size
 	}
 
 	override fun getPlayer(): Player<Game>? {
@@ -38,8 +47,8 @@ class GameFlat(game: Game) : Game(null) {
 		TODO("Not yet implemented")
 	}
 
-	override fun getDurchgang(p0: Int): GameSet {
-		return sets[p0]
+	override fun getGameSet(gameSetNumber: Int): GameSet {
+		return sets[gameSetNumber]
 	}
 
 	override fun getGameInfo(): GameInfo {
@@ -48,10 +57,6 @@ class GameFlat(game: Game) : Game(null) {
 
 	override fun getGameKind(): GameKind {
 		return kind
-	}
-
-	override fun getNumberOfDurchgaenge(): Int {
-		return sets.size
 	}
 
 	override fun getNumberOfWurf(): Int {
@@ -74,11 +79,11 @@ class GameFlat(game: Game) : Game(null) {
 		return sets.sumOf { it.abraeumenScore }
 	}
 
-	override fun getSets(): Array<GameSet> {
+	override fun getGameSets(): Array<GameSet> {
 		return sets
 	}
 
-	override fun setDurchgaenge(p0: MutableList<GameSet>?) {
-		sets = p0!!.toTypedArray()
+	override fun setGameSets(gameSets: MutableList<GameSet>?) {
+		sets = gameSets!!.toTypedArray()
 	}
 }

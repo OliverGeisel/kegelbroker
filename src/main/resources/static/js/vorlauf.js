@@ -30,15 +30,15 @@ function updateTable(game, number) {
 
 function updateRow(row, data) {
     const cells = row.children
-    let back = cells[0].innerHTML != data.anzahlGespielteWuerfe;
+    let back = cells[0].innerHTML !== data.anzahlGespielteWuerfe;
     cells[0].innerHTML = data.anzahlGespielteWuerfe
-    back += cells[1].innerHTML != data.volleScore
+    back += cells[1].innerHTML !== data.volleScore
     cells[1].innerHTML = data.volleScore
-    back += cells[2].innerHTML != data.abraeumenScore
+    back += cells[2].innerHTML !== data.abraeumenScore
     cells[2].innerHTML = data.abraeumenScore
-    back += cells[3].innerHTML != data.score
+    back += cells[3].innerHTML !== data.score
     cells[3].innerHTML = data.score
-    back += cells[4].innerHTML != data.anzahlFehler
+    back += cells[4].innerHTML !== data.anzahlFehler
     cells[4].innerHTML = data.anzahlFehler
     return back
 }
@@ -47,8 +47,8 @@ function updatePicture(wurf, number) {
     const picture = wurf.bild
     const svg = document.getElementById(`picture-${number}-svg`)
     const circles = svg.querySelectorAll("circle")
-    for (let i = 0; i < circles.length; i++) {
-        circles[i].classList.remove("pin-hit", "pin-stand")
+    for (let circle of circles) {
+        circle.classList.remove("pin-hit", "pin-stand")
     }
     if (wurf.anschub) {
         setTimeout(() => {
@@ -60,15 +60,15 @@ function updatePicture(wurf, number) {
 }
 
 function setCircles(circles, code) {
-    const one = (code & 1) != 0;
-    const two = ((code >> 1) & 1) != 0;
-    const three = ((code >> 2) & 1) != 0;
-    const four = ((code >> 3) & 1) != 0;
-    const five = ((code >> 4) & 1) != 0;
-    const six = ((code >> 5) & 1) != 0;
-    const seven = ((code >> 6) & 1) != 0;
-    const eight = ((code >> 7) & 1) != 0;
-    const nine = ((code >> 8) & 1) != 0;
+    const one = (code & 1) !== 0;
+    const two = ((code >> 1) & 1) !== 0;
+    const three = ((code >> 2) & 1) !== 0;
+    const four = ((code >> 3) & 1) !== 0;
+    const five = ((code >> 4) & 1) !== 0;
+    const six = ((code >> 5) & 1) !== 0;
+    const seven = ((code >> 6) & 1) !== 0;
+    const eight = ((code >> 7) & 1) !== 0;
+    const nine = ((code >> 8) & 1) !== 0;
 
     circles[0].classList.add(one ? "pin-hit" : "pin-stand")
     circles[1].classList.add(two ? "pin-hit" : "pin-stand")
