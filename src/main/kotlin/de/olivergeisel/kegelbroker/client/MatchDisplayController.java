@@ -68,23 +68,7 @@ public class MatchDisplayController {
 		return STR."\{templateDir}24-hours";
 	}
 
-	/**
-	 * Get a {@link MatchFlat} by id of the {@link LiveMatch}.
-	 *
-	 * @param matchId the id of the match
-	 * @return the match if it exists, otherwise null
-	 */
-	@GetMapping("/get-match")
-	@ResponseBody
-	public <G extends Game> Match<GameFlat> match(@RequestParam String matchId) {
-		try {
-			Match<?> match = localMatchService.getMatchCached(matchId);
-			return matchFlattener.flat(match);
-		} catch (IllegalArgumentException e) {
-			LOGGER.warn(STR."Requested match \{matchId} not exsist");
-			return null;
-		}
-	}
+
 
 	@GetMapping("{matchId}")
 	public String displayMatch(@PathVariable("matchId") String matchId, @RequestParam("view") String view,
@@ -98,7 +82,7 @@ public class MatchDisplayController {
 		var correctMatch = localMatchService.getMatchCached(matchId);
 		model.addAttribute("match", correctMatch);
 		model.addAttribute("matchName", matchId);
-		return STR."\{templateDir}\{template}";// "matchDisplay";
+		return STR."\{templateDir}\{template}";
 	}
 
 	private String getTemplate(String name) {
@@ -170,4 +154,22 @@ public class MatchDisplayController {
 		return STR."\{templateDir}match-display-vorlauf";
 	}
 
+
+	/**
+	 * Get a {@link MatchFlat} by id of the {@link LiveMatch}.
+	 *
+	 * @param matchId the id of the match
+	 * @return the match if it exists, otherwise null
+	 */
+	@GetMapping("/get-match")
+	@ResponseBody
+	public <G extends Game> Match<GameFlat> match(@RequestParam String matchId) {
+		try {
+			Match<?> match = localMatchService.getMatchCached(matchId);
+			return matchFlattener.flat(match);
+		} catch (IllegalArgumentException e) {
+			LOGGER.warn(STR."Requested match \{matchId} not exsist");
+			return null;
+		}
+	}
 }

@@ -5,6 +5,23 @@
     <title th:text="${id}">2 Teams</title>
     <th:block th:replace="~{main-templates::head-default}"></th:block>
     <link href="/css/default.css" rel="stylesheet">
+    <style>
+        .dg-column {
+            min-width: 25px
+        }
+
+        .player-column {
+            min-width: 200px;
+        }
+
+        .total-column {
+            min-width: 30px;
+        }
+
+        .point-column {
+            min-width: 25px;
+        }
+    </style>
 </head>
 <body>
 <main class="container-fluid">
@@ -29,32 +46,37 @@
                                 <th>4</th>
                                 <th>Gesamt</th>
                                 <th>SP</th>
-                                <th>P</th>
+                                <th>MP</th>
                             </tr>
                             </thead>
                             <tbody class="text-center align-middle">
                             <tr th:each="player : ${team.players}" th:with="game=${player.game}">
-                                <td th:text="${player.completeName}">Max Mustermann</td>
-                                <td th:text="${game.getDurchgang(0).score}">120</td>
-                                <td th:text="${game.getDurchgang(1).score}">XYZ</td>
-                                <td th:text="${game.getDurchgang(2).score}">XYZ</td>
-                                <td th:text="${game.getDurchgang(3).score}">XYZ</td>
-                                <td th:text="${game.totalScore}">0</td>
-                                <td th:text="${match.setPoints[player.completeName]}">0</td>
-                                <td th:text="${match.points[player.completeName]}"></td>
+                                <td class="player-column" th:text="${player.completeName}">Max Mustermann</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(0).score}">120</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(1).score}">XYZ</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(2).score}">XYZ</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(3).score}">XYZ</td>
+                                <td class="total-column" th:text="${game.totalScore}">0</td>
+                                <td class="point-column" th:text="${match.setPoints[player.completeName]}">0</td>
+                                <td class="point-column" th:text="${match.points[player.completeName]}">0</td>
                             </tr>
                             </tbody>
                             <tfoot class="fw-bold text-center">
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>Gesamt:</td>
-                                <td th:text="${team.teamScore}">587</td>
-                                <td th:text="${match.setPoints[team.name]}">587</td>
-                                <td th:text="${match.points[team.name]}"></td>
-                                <td></td>
+                                <td colspan="8">
+                                    <table class="table table-striped">
+                                        <tfoot class="text-center">
+                                        <tr>
+                                            <td th:text="${team.teamTotalVolle}">0V</td>
+                                            <td th:text="${team.teamTotalAbraeumen}">0A</td>
+                                            <td>Gesamt:</td>
+                                            <td th:text="${team.teamScore}"></td>
+                                            <td th:text="${match.setPoints[team.name]}">4</td>
+                                            <td th:text="${match.points[team.name]}">1</td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </td>
                             </tr>
                             </tfoot>
                         </table>
@@ -78,32 +100,37 @@
                                 <th>4</th>
                                 <th>Gesamt</th>
                                 <th>SP</th>
-                                <th>P</th>
+                                <th>MP</th>
                             </tr>
                             </thead>
                             <tbody class="text-center align-middle">
                             <tr th:each="player : ${team.players}" th:with="game=${player.game}">
-                                <td th:text="${player.completeName}">Max Mustermann</td>
-                                <td th:text="${game.getDurchgang(0).score}">120</td>
-                                <td th:text="${game.getDurchgang(1).score}">XYZ</td>
-                                <td th:text="${game.getDurchgang(2).score}">XYZ</td>
-                                <td th:text="${game.getDurchgang(3).score}">XYZ</td>
-                                <td th:text="${game.totalScore}">0</td>
-                                <td th:text="${match.setPoints[player.completeName]}">0</td>
-                                <td th:text="${match.points[player.completeName]}"></td>
+                                <td class="player-column" th:text="${player.completeName}">Max Mustermann</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(0).score}">120</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(1).score}">XYZ</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(2).score}">XYZ</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(3).score}">XYZ</td>
+                                <td class="total-column" th:text="${game.totalScore}">0</td>
+                                <td class="point-column" th:text="${match.setPoints[player.completeName]}">0</td>
+                                <td class="point-column" th:text="${match.points[player.completeName]}"></td>
                             </tr>
                             </tbody>
                             <tfoot class="fw-bold text-center">
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>Gesamt:</td>
-                                <td th:text="${team.teamScore}">587</td>
-                                <td th:text="${match.setPoints[team.name]}">587</td>
-                                <td th:text="${match.points[team.name]}"></td>
-                                <td></td>
+                                <td colspan="8">
+                                    <table class="table table-striped">
+                                        <tfoot class="text-center">
+                                        <tr>
+                                            <td th:text="${team.teamTotalVolle}">0V</td>
+                                            <td th:text="${team.teamTotalAbraeumen}">0A</td>
+                                            <td>Gesamt:</td>
+                                            <td th:text="${team.teamScore}"></td>
+                                            <td th:text="${match.setPoints[team.name]}">4</td>
+                                            <td th:text="${match.points[team.name]}">1</td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </td>
                             </tr>
                             </tfoot>
                         </table>
@@ -125,7 +152,7 @@
                         <table class="table table-striped">
                             <thead class="text-center align-middle">
                             <tr>
-                                <th>P</th>
+                                <th>MP</th>
                                 <th>SP</th>
                                 <th>Gesamt</th>
                                 <th>4</th>
@@ -137,27 +164,32 @@
                             </thead>
                             <tbody class="text-center align-middle">
                             <tr th:each="player :${team.players}" th:with="game=${player.game}">
-                                <td th:text="${match.points[player.completeName]}"></td>
-                                <td th:text="${match.setPoints[player.completeName]}">0</td>
-                                <td th:text="${game.totalScore}">0</td>
-                                <td th:text="${game.getDurchgang(3).score}">0</td>
-                                <td th:text="${game.getDurchgang(2).score}">0</td>
-                                <td th:text="${game.getDurchgang(1).score}">0</td>
-                                <td th:text="${game.getDurchgang(0).score}">0</td>
-                                <td th:text="${player.completeName}">Max Mustermann</td>
+                                <td class="point-column" th:text="${match.points[player.completeName]}"></td>
+                                <td class="point-column" th:text="${match.setPoints[player.completeName]}">0</td>
+                                <td class="total-column" th:text="${game.totalScore}">0</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(3).score}">0</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(2).score}">0</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(1).score}">0</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(0).score}">0</td>
+                                <td class="player-column" th:text="${player.completeName}">Max Mustermann</td>
                             </tr>
                             </tbody>
                             <tfoot class="fw-bold text-center">
                             <tr>
-                                <td th:text="${match.points[team.name]}"></td>
-                                <td th:text="${match.setPoints[team.name]}">587</td>
-                                <td>Gesamt:</td>
-                                <td th:text="${team.teamScore}"></td>
-                                <td>/td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td colspan="8">
+                                    <table class="table table-striped">
+                                        <tfoot class="text-center">
+                                        <tr>
+                                            <td th:text="${match.points[team.name]}">1</td>
+                                            <td th:text="${match.setPoints[team.name]}">4</td>
+                                            <td>Gesamt:</td>
+                                            <td th:text="${team.teamScore}"></td>
+                                            <td th:text="${team.teamTotalAbraeumen}">0A</td>
+                                            <td th:text="${team.teamTotalVolle}">0V</td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </td>
                             </tr>
                             </tfoot>
                         </table>
@@ -174,7 +206,7 @@
                         <table class="table table-striped">
                             <thead class="text-center align-middle">
                             <tr>
-                                <th>P</th>
+                                <th>MP</th>
                                 <th>SP</th>
                                 <th>Gesamt</th>
                                 <th>4</th>
@@ -186,27 +218,32 @@
                             </thead>
                             <tbody class="text-center align-middle">
                             <tr th:each="player :${team.players}" th:with="game=${player.game}">
-                                <td th:text="${match.points[player.completeName]}"></td>
-                                <td th:text="${match.setPoints[player.completeName]}">0</td>
-                                <td th:text="${game.totalScore}">0</td>
-                                <td th:text="${game.getDurchgang(3).score}">0</td>
-                                <td th:text="${game.getDurchgang(2).score}">0</td>
-                                <td th:text="${game.getDurchgang(1).score}">0</td>
-                                <td th:text="${game.getDurchgang(0).score}">0</td>
-                                <td th:text="${player.completeName}">Max Mustermann</td>
+                                <td class="point-column" th:text="${match.points[player.completeName]}"></td>
+                                <td class="point-column" th:text="${match.setPoints[player.completeName]}">0</td>
+                                <td class="total-column" th:text="${game.totalScore}">0</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(3).score}">0</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(2).score}">0</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(1).score}">0</td>
+                                <td class="dg-column" th:text="${game.getDurchgang(0).score}">0</td>
+                                <td class="player-column" th:text="${player.completeName}">Max Mustermann</td>
                             </tr>
                             </tbody>
                             <tfoot class="fw-bold text-center">
                             <tr>
-                                <td th:text="${match.points[team.name]}"></td>
-                                <td th:text="${match.setPoints[team.name]}">587</td>
-                                <td>Gesamt:</td>
-                                <td th:text="${team.teamScore}"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td colspan="8">
+                                    <table class="table table-striped">
+                                        <tfoot class="text-center">
+                                        <tr>
+                                            <td th:text="${match.points[team.name]}">1</td>
+                                            <td th:text="${match.setPoints[team.name]}">4</td>
+                                            <td>Gesamt:</td>
+                                            <td th:text="${team.teamScore}">G 1</td>
+                                            <td th:text="${team.teamTotalAbraeumen}">0A</td>
+                                            <td th:text="${team.teamTotalVolle}">0V</td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </td>
                             </tr>
                             </tfoot>
                         </table>
@@ -232,14 +269,17 @@
         <div class="alert alert-danger" hidden id="connection-status"></div>
     </section>
 </main>
-<footer th:replace="~{main-templates::footer}"/>
+<footer th:replace="~{main-templates::footer}"></footer>
 <script th:inline="javascript">
+
+    let intervalId = setInterval(refresh, 5_000)
+    let connectionErrorCounter = 0
 
     function teamTableUpdate(data, id, points, pointsSet) {
         const team = document.getElementById(id)
         const table = team.querySelector('tbody')
         const rows = table.querySelectorAll('tr')
-        const footer = team.querySelector("tfoot")
+        const footer = team.querySelector("tfoot table tfoot")
         for (let i = 0; i < data.players.length; i++) {
             const player = data.players[i]
             const game = player.game
@@ -256,11 +296,11 @@
         }
         // Update footer row
         const footerCells = footer.querySelectorAll('td')
-        footerCells[1].innerText = data.teamTotalVolle
-        footerCells[3].innerText = data.teamTotalAbraeumen
-        footerCells[5].innerText = data.teamScore
-        footerCells[6].innerText = pointsSet[data.name]
-        footerCells[7].innerText = points[data.name]
+        footerCells[0].innerText = `Volle: ${data.teamTotalVolle}`
+        footerCells[1].innerText = `Abräumer: ${data.teamTotalAbraeumen}`
+        footerCells[3].innerText = data.teamScore
+        footerCells[4].innerText = pointsSet[data.name]
+        footerCells[5].innerText = points[data.name]
 
         teamTableUpdateReverse(data, id, points, pointsSet)
     }
@@ -269,7 +309,7 @@
         const team = document.getElementById(`${id}-reverse`)
         const table = team.querySelector('tbody')
         const rows = table.querySelectorAll('tr')
-        const footer = team.querySelector("tfoot")
+        const footer = team.querySelector("tfoot table tfoot")
         for (let i = 0; i < data.players.length; i++) {
             const player = data.players[i]
             const game = player.game
@@ -288,14 +328,15 @@
         const footerCells = footer.querySelectorAll('td')
         footerCells[0].innerText = points[data.name]
         footerCells[1].innerText = pointsSets[data.name]
-        footerCells[2].innerText = data.teamScore
-        footerCells[4].innerText = data.teamTotalAbraeumen
-        footerCells[6].innerText = data.teamTotalVolle
+        footerCells[3].innerText = data.teamScore
+        footerCells[4].innerText = `Abräumer: ${data.teamTotalAbraeumen}`
+        footerCells[5].innerText = `Volle: ${data.teamTotalVolle}`
     }
 
     async function refresh() {
         const id = /*[[${matchName}]]*/""
         let data;
+        const state = document.getElementById('connection-status')
         try {
             const response = await fetch(`/live/get-match?matchId=${id}`);
             if (!response.ok) {
@@ -316,7 +357,6 @@
             return
         }
         connectionErrorCounter = 0
-        const state = document.getElementById('connection-status')
         state.innerText = ''
         state.hidden = true
         const start = Date.now();
@@ -325,9 +365,9 @@
             const group = document.getElementById('refresh-button-group')
             group.childNodes.forEach(node => node.disabled = true)
             state.hidden = false
-            state.classList.add('alert-success')
+            state.classList.toggle('alert-success')
             state.classList.add('mt-1')
-            state.classList.remove('alert-danger')
+            state.classList.toggle('alert-danger')
             state.innerText = 'Match finished'
         }
         const home = data.teams[0]
@@ -348,9 +388,6 @@
         document.getElementById('live-point').setAttribute('fill', 'green')
         intervalId = setInterval(refresh, document.getElementById('interval').value * 1000)
     }
-
-    let intervalId = setInterval(refresh, 5_000)
-    let connectionErrorCounter = 0
 
 </script>
 </body>

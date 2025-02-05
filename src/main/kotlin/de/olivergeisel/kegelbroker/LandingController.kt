@@ -13,6 +13,14 @@ import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 import java.util.*
 
+/**
+ * Controller for the landing page
+ * This controller is responsible for the landing page and the creation of new matches
+ * @author Oliver Geisel
+ * @version 1.0
+ * @since 1.0
+ * @version 1.0
+ */
 @Controller
 @PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/")
@@ -40,17 +48,11 @@ class LandingController(
 		return "createMatch"
 	}
 
-	@GetMapping("/day")
-	@ResponseBody
-	fun day(@RequestParam date: LocalDate): List<String> {
-		return localMatchService.getMatchNames(date)
-	}
-
-	@PostMapping("/create-special")
-	fun createMatchSpecial(form: MatchCreateForm): String {
-		LOGGER.log.info("Start creating special match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
+	@PostMapping("/create")
+	fun createMatch(form: MatchCreateForm): String {
+		LOGGER.log.info("Start creating match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
 		try {
-			localMatchService.createSpecialMatch(form)
+			localMatchService.createMatch(form)
 		} catch (e: IllegalArgumentException) {
 			LOGGER.log.error(
 				"Failed to create match ${form.matchId} on ${form.matchDate} with name ${
@@ -63,11 +65,11 @@ class LandingController(
 		return "redirect:/"
 	}
 
-	@PostMapping("/create")
-	fun createMatch(form: MatchCreateForm): String {
-		LOGGER.log.info("Start creating match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
+	@PostMapping("/create-special")
+	fun createMatchSpecial(form: MatchCreateForm): String {
+		LOGGER.log.info("Start creating special match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
 		try {
-			localMatchService.createMatch(form)
+			localMatchService.createSpecialMatch(form)
 		} catch (e: IllegalArgumentException) {
 			LOGGER.log.error(
 				"Failed to create match ${form.matchId} on ${form.matchDate} with name ${
@@ -91,6 +93,21 @@ class LandingController(
 		return "live-match-details"
 	}
 
+	/**
+	 * Perform action for a specific match
+	 * possible actions are:
+	 * - continue: continue the match
+	 * - end: end the match
+	 * - static: set the match to static
+	 * - update: update the match now
+	 * - reload: reload the match from disk
+	 * - delete: delete the match
+	 *
+	 * @param id the id of the match
+	 * @param action the action to perform
+	 *
+	 *
+	 */
 	@PostMapping("/detail")
 	fun detail(@RequestParam id: UUID, @RequestParam action: String): String {
 		val match = matchRepository.findById(id)
@@ -126,6 +143,17 @@ class LandingController(
 		}
 		matchRepository.save(match.get())
 		return "redirect:/detail?id=$id"
+	}
+
+	/**
+	 * Get a list of all matches for a specific day
+	 * @param date the date to get the matches for
+	 * @return a list of match names
+	 */
+	@GetMapping("/day")
+	@ResponseBody
+	fun day(@RequestParam date: LocalDate): List<String> {
+		return localMatchService.getMatchNames(date)
 	}
 
 }
