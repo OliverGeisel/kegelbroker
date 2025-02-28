@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MatchTree</title>
+    <th:block th:replace="~{main-templates::head-default}"></th:block>
+
+</head>
+<body>
+
+<main class="container">
+    <div th:replace="~{main-templates :: navigation}"></div>
+    <header>
+        <h1>MatchTree - <span th:remove="tag" th:text="${matchTree.name}"></span></h1>
+    </header>
+    <section>
+        <form method="post" th:action="@{save}">
+            <input name="id" th:value="${matchTree.id}" type="hidden">
+            <button class="btn btn-primary">Export</button>
+        </form>
+    </section>
+</main>
+<section id="svg-section">
+    <div th:replace="~{matchTree/fragments :: tree-svg}"></div>
+</section>
+<main class="container">
+    <section id="tree-section">
+        <div id="root-element" th:with="root=${matchTree.root}">
+            <div class="card">
+                <div class="card-header">
+                    <form method="post" th:action="change-name">
+                        <input name="id" th:value="${root.id}" type="hidden">
+                        <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
+                        <input name="name" required th:value="${root.name}" type="text">
+                        <button class="btn btn-primary" type="submit">Change Name</button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div th:each="player,iter:${root.players}">
+                                <h5 class="card-title"
+                                > Spieler <span th:text="| ${iter.count}: ${player.name}|">M1</span>
+                                </h5>
+                                <form method="post" th:action="@{edit-player}">
+                                    <input name="id" th:value="${root.id}" type="hidden">
+                                    <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
+                                    <input name="position" th:value="${iter.index}" type="hidden">
+                                    <input class="form-control-sm" name="name" th:value="${player.name}" type="text">
+                                    <label> TeamIndex
+                                        <input class="form-control-sm" max="1000" min="-1" name="index" th:style="${player.teamIndex}==-1?'background-color: red':''"
+                                               th:value="${player.teamIndex}" type="number"
+                                               value="-1">
+                                    </label>
+                                    <label> TeamNummer
+                                        <input min="-1" name="teamNumber" th:style="${player.teamNumber}==-1?'background-color: red':''" th:value="${player.teamNumber}"
+                                               type="number">
+                                    </label>
+                                    <button class="btn btn-primary" type="submit">Edit</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-3">
+
+                            <div th:unless="${matchTree.extraMatch!=null}">
+                                <form method="post" th:action="@{add-extra-match}">
+                                    <input name="id" th:value="${matchTree.id}" type="hidden">
+                                    <input class="form-control-sm" name="name" required>
+                                    <button class="btn btn-primary">Add Extra Match</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row ms-2">
+                    <div class="col" th:each="child:${root.children}">
+                        <div th:replace="~{matchTree/fragments :: child-node (${child})}"></div>
+                    </div>
+                    <form method="post" th:action="@{add-child}"
+                          th:unless="${root.config.numChildren} <= ${root.children.size()} or ${root.level}>=${matchTree.maxDepth}">
+                        <input name="id" th:value="${root.id}" type="hidden">
+                        <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
+                        <label>Name des Kind-Knotens
+                            <input name="name" required type="text">
+                        </label>
+                        <button class="btn btn-primary">Add Child</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="etra-node" th:if="${matchTree.extraMatch}!=null" th:with="extraMatch=${matchTree.extraMatch}">
+            Extra Match
+            <div class="card">
+                <div class="card-header">
+                    <form method="post" th:action="change-name">
+                        <input name="id" th:value="${extraMatch.id}" type="hidden">
+                        <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
+                        <input name="name" required th:value="${extraMatch.name}" type="text">
+                        <button class="btn btn-primary" type="submit">Change Name</button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <div th:each="player,iter:${matchTree.extraMatch.players}">
+                        <h5 class="card-title"> Spieler <span th:text="| ${iter.count}: ${player.name}|">M1</span>
+                        </h5>
+                        <form method="post" th:action="@{edit-player}">
+                            <input name="id" th:value="${matchTree.extraMatch.id}" type="hidden">
+                            <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
+                            <input name="position" th:value="${iter.index}" type="hidden">
+                            <input class="form-control-sm" name="name" th:value="${player.name}" type="text">
+                            <label> TeamIndex
+                                <input class="form-control-sm" max="1000" min="-1" name="index" th:style="${player.teamIndex}==-1?'background-color: red':''"
+                                       th:value="${player.teamIndex}" type="number"
+                                       value="-1">
+                            </label>
+                            <label> TeamNummer
+                                <input min="-1" name="teamNumber" th:style="${player.teamNumber}==-1?'background-color: red':''" th:value="${player.teamNumber}"
+                                       type="number">
+                            </label>
+                            <button class="btn btn-primary" type="submit">Edit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{main-templates::footer}"></footer>
+
+</body>
+</html>
