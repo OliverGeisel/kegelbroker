@@ -1,9 +1,9 @@
 package de.olivergeisel.kegelbroker.client
 
+import de.olivergeisel.kegelbroker.match_tree.MatchTree
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.util.*
-import kotlin.io.path.Path
 
 /**
  * Entity to represent a Match, that is hosted on the application
@@ -41,8 +41,7 @@ class LiveMatch(
 	/**
 	 * Static state of the match. It will not change its state anymore
 	 */
-	var static :Boolean = false
-
+	var static: Boolean = false,
 ) {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
@@ -51,6 +50,15 @@ class LiveMatch(
 
 	@ElementCollection
 	var teams: List<String> = LinkedList<String>()
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+	@JoinTable(
+		name = "live_match_match_tree",
+		joinColumns = [JoinColumn(name = "live_match_id")],
+		inverseJoinColumns = [JoinColumn(name = "match_tree_id")]
+	)
+	var matchTree: MutableList<MatchTree> = LinkedList<MatchTree>()
+
 
 	private fun LiveMatch() {
 
