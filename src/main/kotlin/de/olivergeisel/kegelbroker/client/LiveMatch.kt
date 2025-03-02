@@ -1,5 +1,6 @@
 package de.olivergeisel.kegelbroker.client
 
+import de.olivergeisel.kegelbroker.match_tree.MatchTree
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.util.*
@@ -52,9 +53,18 @@ class LiveMatch(
 	@ElementCollection
 	var teams: List<String> = LinkedList<String>()
 
+	@ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+	@JoinTable(
+		name = "live_match_match_tree",
+		joinColumns = [JoinColumn(name = "live_match_id")],
+		inverseJoinColumns = [JoinColumn(name = "match_tree_id")]
+	)
+	var matchTree: MutableList<MatchTree> = LinkedList<MatchTree>()
+
 	protected fun LiveMatch() {
 		// for JPA
 	}
+
 
 	fun getTeamsAsString(): String{
 		return teams.joinToString(", ")

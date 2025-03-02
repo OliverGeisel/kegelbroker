@@ -10,6 +10,8 @@ import de.kegelplay.infrastructure.data_reader.KeglerheimGeneralReader
 import de.kegelplay.infrastructure.update.MatchUpdater
 import de.kegelplay.infrastructure.update.SpecialMatchUpdater
 import de.olivergeisel.kegelbroker.ApplicationProperties
+import de.olivergeisel.kegelbroker.match_tree.MatchNode
+import de.olivergeisel.kegelbroker.match_tree.MatchTreeRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.CacheManager
@@ -36,7 +38,8 @@ import kotlin.io.path.name
 class LocalMatchService(
 	private val applicationProperties: ApplicationProperties,
 	private val liveMatchRepository: LiveMatchRepository,
-	private val cache: CacheManager
+	private val cache: CacheManager,
+	private val matchTreeRepository: MatchTreeRepository
 ) {
 
 	private object LOGGER {
@@ -107,6 +110,43 @@ class LocalMatchService(
 		return teamNamesDir.toList()
 	}
 
+	private fun updateMatchTree(match: LiveMatch, matchUpdater: MatchUpdater<*>) {
+		val matchTrees = match.matchTree
+		val realMatch = matchUpdater.match
+		for (matchTree in matchTrees) {
+			// root node
+			val rootNode = matchTree.root
+			// Todo assumes that there is only one team in the tree
+			val teamNumber = rootNode.players[0].teamNumber
+			val team = realMatch.teams[teamNumber]
+			for (player in rootNode.players) {
+				val teamIndex = player.teamIndex
+				val realPlayer = team.players[teamIndex]
+				player.name = realPlayer.completeName
+				player.score = realPlayer.game.totalScore
+			}
+			for (child in rootNode.children) {
+				updateChild(child, realMatch, teamNumber)
+			}
+			matchTreeRepository.save(matchTree)
+		}
+	}
+
+	private fun updateChild(child: MatchNode?, realMatch: Match<out Game>, teamNumber: Int) {
+		if (child == null) return
+		val team = realMatch.teams[teamNumber]
+		for (player in child.players) {
+			val teamIndex = player.teamIndex
+			val realPlayer = team.players[teamIndex]
+			player.name = realPlayer.completeName
+			player.score = realPlayer.game.totalScore
+		}
+		for (child in child.children) {
+			updateChild(child, realMatch, teamNumber)
+		}
+
+	}
+
 	@Scheduled(fixedRate = 5_000)
 	fun updateMatch() {
 		for (match in liveMatchRepository.findByRunningAndStatic(running = true, static = false)) {
@@ -116,6 +156,7 @@ class LocalMatchService(
 			LOGGER.logger.info("Updating match '$matchName' at $start")
 			try {
 				updater?.updateMatch()
+				updateMatchTree(match, updater!!)
 			} catch (e: Exception) {
 				LOGGER.logger.warn("Failed to update match $matchName")
 				LOGGER.logger.debug("", e)

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="child-node (child)">
+    <div class="card">
+        <div class="card-header">
+            <form method="post" th:action="change-name">
+                <input name="id" th:value="${child.id}" type="hidden">
+                <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
+                <input name="name" required th:value="${child.name}" type="text">
+                <button class="btn btn-primary" type="submit">Change Name</button>
+            </form>
+        </div>
+        <div class="card-body">
+            <div th:each="player,iter:${child.players}">
+                <h5 class="card-title"> Spieler <span th:text="| ${iter.count}: ${player.name}|">M1</span>
+                </h5>
+                <form method="post" th:action="@{edit-player}">
+                    <input name="id" th:value="${child.id}" type="hidden">
+                    <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
+                    <input name="position" th:value="${iter.index}" type="hidden">
+                    <input class="form-control-sm" name="name" th:value="${player.name}" type="text">
+                    <label> TeamIndex
+                        <input class="form-control-sm" max="1000" min="-1" name="index" th:style="${player.teamIndex}==-1?'background-color: red':''"
+                               th:value="${player.teamIndex}" type="number"
+                               value="-1">
+                    </label>
+                    <label> TeamNummer
+                        <input min="-1" name="teamNumber" th:style="${player.teamNumber}==-1?'background-color: red':''" th:value="${player.teamNumber}"
+                               type="number">
+                    </label>
+                    <button class="btn btn-primary" type="submit">Edit</button>
+                </form>
+            </div>
+        </div>
+        <div class="row ms-2">
+            <div class="col" th:each="child_child:${child.children}">
+                <div th:replace="~{:: child-node (${child_child})}"></div>
+            </div>
+            <form method="post" th:action="@{add-child}"
+                  th:unless="${child.config.numChildren} <= ${child.children.size()}
+              or ${child.level}>=${matchTree.maxDepth}">
+                <input name="id" th:value="${child.id}" type="hidden">
+                <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
+                <label>Name des Kind-Knotens
+                    <input name="name" required type="text">
+                </label>
+                <button class="btn btn-primary">Add Child</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" style="background-color: #7e837e" th:fragment="tree-svg">
+    <svg height="1000" id="tree-svg" style="border-radius: 5px; border: 5px black;" width="100%"></svg>
+
+    <script th:inline="javascript" type="module">
+
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+        var rawData = /*[[${jsonData}]]*/;
+        const dataJson = JSON.parse(rawData);
+        const svg = d3.select("#tree-svg")
+        const svgElement = document.getElementById("tree-svg");
+        const nodeWidth = 200;
+        const nodeHeight = 50;
+        let middleOfSVG = svg.node().getBoundingClientRect().width / 2;
+
+        function createTree(treeData) {
+            const root = createNode(treeData.root, {x: middleOfSVG - (nodeWidth / 2), y: 50});
+            createChildren(treeData.root.children, root,
+                {x: middleOfSVG - nodeWidth / 2, y: 150, middleGrandParent: middleOfSVG * 2});
+
+            if (treeData.extraMatch != null) {
+                const extraNode = createNode(treeData.extraMatch, {x: middleOfSVG + (1.1 * nodeWidth), y: 50});
+            }
+
+        }
+
+        function createChildren(childrenData, parentNode, position) {
+            const numChildren = childrenData.length;
+            if (numChildren === 0) {
+                return;
+            }
+            const middleParent = {x: parentNode.x + (parentNode.width) / 2, y: parentNode.y + parentNode.height};
+            let levelWidth;
+            let sectionWidth;
+            if (middleParent.x <= position.middleGrandParent) {
+                levelWidth = middleParent.x * 2
+            } else {
+                levelWidth = (position.middleGrandParent - middleParent.x) * 2
+            }
+            sectionWidth = levelWidth / (numChildren);
+            let startX;
+            let startY;
+            if (numChildren === 1) {
+                startX = position.x
+            } else {
+                startX = sectionWidth / 2 + position.middleGrandParent - levelWidth - nodeWidth / 2;
+            }
+            startY = position.y;
+            childrenData.forEach((child, index) => {
+                const childPosition = {x: startX + index * sectionWidth, y: startY};
+                const childNode = createNode(child, childPosition);
+                const middleX = (position.x + nodeWidth / 2) / 2;
+                const middleY = (position.y + nodeHeight) / 2;
+                if (child.children.length === 0) {
+                } else {
+                    createChildren(child.children, childNode, {
+                        x: childPosition.x, y: childPosition.y +
+                            nodeHeight + 100, middleGrandParent: middleParent.x
+                    });
+                }
+                const middleChild = {x: childNode.x + childNode.width / 2, y: childNode.y};
+                linkNodes(middleParent, middleChild);
+            });
+        }
+
+        function linkNodes(parent, child) {
+            var middleX = (parent.x + child.x) / 2;
+            var middleY = (parent.y + child.y) / 2;
+
+            svg.append("line")
+                .attr("x1", parent.x)
+                .attr("y1", parent.y)
+                .attr("x2", parent.x)
+                .attr("y2", middleY)
+                .attr("stroke", "black");
+            svg.append("line")
+                .attr("x1", parent.x)
+                .attr("y1", middleY)
+                .attr("x2", middleX)
+                .attr("y2", middleY)
+                .attr("stroke", "black");
+            svg.append("line")
+                .attr("x1", middleX)
+                .attr("y1", middleY)
+                .attr("x2", child.x)
+                .attr("y2", child.y)
+                .attr("stroke", "black");
+        }
+
+        function createNode(data, position) {
+            let player1 = data.players[0].name
+            if (player1.length === 0) {
+                player1 = "Spieler 1"
+            }
+            let player2 = data.players[1].name
+            if (player2.length === 0) {
+                player2 = "Spieler 2"
+            }
+            let score1 = data.players[0].score
+            let score2 = data.players[1].score
+
+            const node = svg.append("g")
+                .attr("transform", "translate(" + position.x + "," + position.y + ")")
+                .attr("class", "node")
+                .attr("id", data.id);
+            node.append("rect")
+                .attr("width", 200)
+                .attr("height", 50)
+                .attr("fill", "steelblue")
+                .attr("stroke", "black")
+                .attr("rx", "5px")
+                .attr("ry", "5px");
+            // name of the node
+            node.append("text")
+                .attr("x", 100)
+                .attr("y", -15)
+                .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "middle")
+                .text(data.name);
+            node.append("text")
+                .attr("x", 5)
+                .attr("y", 12)
+                .attr("text-anchor", "left")
+                .attr("dominant-baseline", "middle")
+                .text(player1);
+            node.append("text")
+                .attr("x", 5)
+                .attr("y", 37)
+                .attr("text-anchor", "left")
+                .attr("dominant-baseline", "middle")
+                .text(player2);
+            node.append("rect")
+                .attr("x", 150)
+                .attr("y", 0)
+                .attr("width", 25)
+                .attr("height", 50)
+                .attr("fill", "steelblue")
+                .attr("stroke", "black");
+            node.append("line")
+                .attr("x1", 0)
+                .attr("y1", 25)
+                .attr("x2", 200)
+                .attr("y2", 25)
+                .attr("stroke", "black");
+            node.append("text")
+                .attr("x", 180)
+                .attr("y", 15)
+                .attr("text-anchor", "left")
+                .attr("dominant-baseline", "middle")
+                .text(score1);
+            node.append("text")
+                .attr("x", 180)
+                .attr("y", 37)
+                .attr("text-anchor", "left")
+                .attr("dominant-baseline", "middle")
+                .text(score2);
+            return {x: position.x, y: position.y, width: 200, height: 50};
+        }
+
+
+        let errorCount = 0;
+
+        function updateTree() {
+            const treeId = /*[[${matchTree.id}]]*/;
+            middleOfSVG = svg.node().getBoundingClientRect().width / 2;
+
+            fetch("/match-tree/json?id=" + treeId)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("HTTP error " + response.status);
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    svg.selectAll("*").remove();
+                    createTree(data);
+                })
+                .catch(
+                    error => {
+                        console.error(error)
+                        errorCount++;
+                        if (errorCount > 5) {
+                            clearInterval(updateTree);
+                        }
+                    }
+                );
+        }
+
+        updateTree();
+        setInterval(updateTree, 5000);
+    </script>
+</div>
+</body>
+</html>
