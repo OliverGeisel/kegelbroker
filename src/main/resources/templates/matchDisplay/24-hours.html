@@ -2,26 +2,93 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${id}">Vorlauf</title>
+    <title th:text="${id}">2 Teams</title>
     <th:block th:replace="~{main-templates::head-default}"></th:block>
     <link href="/css/default.css" rel="stylesheet">
-    <script src="/js/vorlauf.js"></script>
+    <script src="/js/update-functions.js"></script>
 </head>
 <body>
 <main class="container-fluid">
     <div th:replace="~{matchDisplay/basic-match-fragments :: alpha-info}"></div>
-    <!--/*@thymesVar id="match" type="de.kegelplay.infrastructure.data_reader.MatchNTeams"*/-->
-    <!--/*@thymesVar id="player" type="core.team_and_player.Player"*/-->
-    <!--/*@thymesVar id="game" type="core.game.Game"*/-->
-    <section>
+    <!--/*@thymesVar id="match" type="core.match.Match"*/-->
+    <section id="normal">
         <header>
-            <h2 class="centering text-center pb-3">Vorlauf</h2>
+            <h2 class="centering text-center pb-3">24 Stunden Kegeln Live-Ticker</h2>
         </header>
         <article id="current-players">
-            <div class="row">
-                <div class="col-12 col-sm-6 col-md-3" id="lane-1" th:with="player=${match.getCurrentPlayers()[0]}">
-                    <h3 th:text="${match.config.laneNames[0]}">Bahn 1</h3>
-                    <div id="p1-header">
+            <div class="row" th:remove="all-but-first">
+                <div class="col-12 col-sm-6 col-md-3 m-s2" th:each="player, iter: ${match.getCurrentPlayers()}"
+                     th:id="|lane-${iter.count}|">
+                    <h3 th:text="${match.config.laneNames[iter.index]}">Bahn 1</h3>
+                    <div th:id="|p${iter.count}-header|">
+                        <h4 th:text="|${player.vorname} ${player.nachname}|"></h4>
+                    </div>
+                    <div><!-- Table-->
+                        <table class="table table-striped" style="min-height:250px" th:with="game=${player.game}">
+                            <thead>
+                            <tr>
+                                <th>Wurf</th>
+                                <th>Volle</th>
+                                <th>Räumer</th>
+                                <th>Fw</th>
+                                <th>Gesamt</th>
+                            </tr>
+                            </thead>
+                            <tbody th:remove="all-but-first">
+                            <tr th:each="set,iter2: ${game.gameSets}" th:id="|p${iter.count}-r${iter2.count}|">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                                <td th:text="${set.score}">140</td>
+                            </tr>
+                            <tr id="p1-r2" th:with="set=${game.getDurchgang(1)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                            </tr>
+                            <tr id="p1-r3" th:with="set=${game.getDurchgang(2)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                            </tr>
+                            <tr id="p1-r4" th:with="set=${game.getDurchgang(3)}">
+                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
+                                <td th:text="${set.volleScore}">95</td>
+                                <td th:text="${set.abraeumenScore}">45</td>
+                                <td th:text="${set.score}">140</td>
+                                <td th:text="${set.anzahlFehler}">0</td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr th:id="|p${iter.count}-summary|">
+                                <td th:text="${game.numberOfWurf}">120</td>
+                                <td th:text="${game.totalVolle}">XYZ</td>
+                                <td th:text="${game.totalAbraeumen}">ABC</td>
+                                <td th:text="${game.totalScore}">587</td>
+                                <td th:text="${game.totalFehlwurf}">0</td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="p-1" th:id="|lane-${iter.count}-wurfbild|">
+                        <div class="row justify-content-center">
+                            <div class="svg-container">
+                                <svg class="svg-content col-md border border-4" preserveAspectRatio="xMidYMid meet"
+                                     th:id="|picture-${iter.count}-svg|" viewBox="0 0 100 100"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3" id="lane-2" th:with="player=${match.getCurrentPlayers()[1]}">
+                    <h3 th:text="${match.config.laneNames[1]}">Bahn 2</h3>
+                    <div id="p2-header">
                         <h4 th:text="${player.vorname}"></h4>
                         <h4 th:text="${player.nachname}"></h4>
                         <h4 th:text="${player.club}"></h4>
@@ -38,98 +105,28 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr id="p1-r1" th:with="set=${game.getGameSet(0)}">
+                            <tr id="p2-r1" th:with="set=${game.getDurchgang(0)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
                                 <td th:text="${set.score}">140</td>
                                 <td th:text="${set.anzahlFehler}">0</td>
                             </tr>
-                            <tr id="p1-r2" th:with="set=${game.getGameSet(1)}">
+                            <tr id="p2-r2" th:with="set=${game.getDurchgang(1)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
                                 <td th:text="${set.score}">140</td>
                                 <td th:text="${set.anzahlFehler}">0</td>
                             </tr>
-                            <tr id="p1-r3" th:with="set=${game.getGameSet(2)}">
+                            <tr id="p2-r3" th:with="set=${game.getDurchgang(2)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
                                 <td th:text="${set.score}">140</td>
                                 <td th:text="${set.anzahlFehler}">0</td>
                             </tr>
-                            <tr id="p1-r4" th:with="set=${game.getGameSet(3)}">
-                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
-                                <td th:text="${set.volleScore}">95</td>
-                                <td th:text="${set.abraeumenScore}">45</td>
-                                <td th:text="${set.score}">140</td>
-                                <td th:text="${set.anzahlFehler}">0</td>
-                            </tr>
-                            </tbody>
-                            <tfoot>
-                            <tr id="p1-summary">
-                                <td th:text="${game.numberOfWurf}">120</td>
-                                <td th:text="${game.totalVolle}">XYZ</td>
-                                <td th:text="${game.totalAbraeumen}">ABC</td>
-                                <td th:text="${game.totalScore}">587</td>
-                                <td th:text="${game.totalFehlwurf}">0</td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <div class="p-1" id="lane-1-wurfbild">
-                        <div class="row justify-content-center">
-                            <div class="svg-container">
-                                <svg class="svg-content col-md border border-4" id="picture-1-svg"
-                                     preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-3" id="lane-2" th:with="player=${match.getCurrentPlayers()[1]}">
-                    <h3 th:text="${match.config.laneNames[1]}">Bahn 2</h3>
-                    <div id="p2-header">
-                        <h4 th:text="${player.vorname}">Vorame</h4>
-                        <h4 th:text="${player.nachname}">Nachname</h4>
-                        <h4 th:text="${player.club}">Club</h4>
-                    </div>
-                    <div><!-- Table-->
-                        <table class="table table-striped" th:with="game=${player.game}">
-                            <thead>
-                            <tr>
-                                <th>Wurf</th>
-                                <th>Volle</th>
-                                <th>Räumer</th>
-                                <th>Gesamt</th>
-                                <th>Fw</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr id="p2-r1" th:with="set=${game.getGameSet(0)}">
-                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
-                                <td th:text="${set.volleScore}">95</td>
-                                <td th:text="${set.abraeumenScore}">45</td>
-                                <td th:text="${set.score}">140</td>
-                                <td th:text="${set.anzahlFehler}">0</td>
-                            </tr>
-                            <tr id="p2-r2" th:with="set=${game.getGameSet(1)}">
-                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
-                                <td th:text="${set.volleScore}">95</td>
-                                <td th:text="${set.abraeumenScore}">45</td>
-                                <td th:text="${set.score}">140</td>
-                                <td th:text="${set.anzahlFehler}">0</td>
-                            </tr>
-                            <tr id="p2-r3" th:with="set=${game.getGameSet(2)}">
-                                <td th:text="${set.anzahlGespielteWuerfe}">30</td>
-                                <td th:text="${set.volleScore}">95</td>
-                                <td th:text="${set.abraeumenScore}">45</td>
-                                <td th:text="${set.score}">140</td>
-                                <td th:text="${set.anzahlFehler}">0</td>
-                            </tr>
-                            <tr id="p2-r4" th:with="set=${game.getGameSet(3)}">
+                            <tr id="p2-r4" th:with="set=${game.getDurchgang(3)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
@@ -162,9 +159,9 @@
                 <div class="col-12 col-sm-6 col-md-3" id="lane-3" th:with="player=${match.getCurrentPlayers()[2]}">
                     <h3 th:text="${match.config.laneNames[2]}">Bahn 3</h3>
                     <div id="p3-header">
-                    <h4 th:text="${player.vorname}"></h4>
-                    <h4 th:text="${player.nachname}"></h4>
-                    <h4 th:text="${player.club}"></h4>
+                        <h4 th:text="${player.vorname}"></h4>
+                        <h4 th:text="${player.nachname}"></h4>
+                        <h4 th:text="${player.club}"></h4>
                     </div>
                     <div><!-- Table-->
                         <table class="table table-striped" th:with="game=${player.game}">
@@ -178,28 +175,28 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr id="p3-r1" th:with="set=${game.getGameSet(0)}">
+                            <tr id="p3-r1" th:with="set=${game.getDurchgang(0)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
                                 <td th:text="${set.score}">140</td>
                                 <td th:text="${set.anzahlFehler}">0</td>
                             </tr>
-                            <tr id="p3-r2" th:with="set=${game.getGameSet(1)}">
+                            <tr id="p3-r2" th:with="set=${game.getDurchgang(1)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
                                 <td th:text="${set.score}">140</td>
                                 <td th:text="${set.anzahlFehler}">0</td>
                             </tr>
-                            <tr id="p3-r3" th:with="set=${game.getGameSet(2)}">
+                            <tr id="p3-r3" th:with="set=${game.getDurchgang(2)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
                                 <td th:text="${set.score}">140</td>
                                 <td th:text="${set.anzahlFehler}">0</td>
                             </tr>
-                            <tr id="p3-r4" th:with="set=${game.getGameSet(3)}">
+                            <tr id="p3-r4" th:with="set=${game.getDurchgang(3)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
@@ -232,9 +229,9 @@
                 <div class="col-12 col-sm-6 col-md-3" id="lane-4" th:with="player=${match.getCurrentPlayers()[3]}">
                     <h3 th:text="${match.config.laneNames[3]}">Bahn 4</h3>
                     <div id="p4-header">
-                    <h4 th:text="${player.vorname}"></h4>
-                    <h4 th:text="${player.nachname}"></h4>
-                    <h4 th:text="${player.club}"></h4>
+                        <h4 th:text="${player.vorname}"></h4>
+                        <h4 th:text="${player.nachname}"></h4>
+                        <h4 th:text="${player.club}"></h4>
                     </div>
                     <div><!-- Table-->
                         <table class="table table-striped" th:with="game=${player.game}">
@@ -248,28 +245,28 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr id="p4-r1" th:with="set=${game.getGameSet(0)}">
+                            <tr id="p4-r1" th:with="set=${game.getDurchgang(0)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
                                 <td th:text="${set.score}">140</td>
                                 <td th:text="${set.anzahlFehler}">0</td>
                             </tr>
-                            <tr id="p4-r2" th:with="set=${game.getGameSet(1)}">
+                            <tr id="p4-r2" th:with="set=${game.getDurchgang(1)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
                                 <td th:text="${set.score}">140</td>
                                 <td th:text="${set.anzahlFehler}">0</td>
                             </tr>
-                            <tr id="p4-r3" th:with="set=${game.getGameSet(2)}">
+                            <tr id="p4-r3" th:with="set=${game.getDurchgang(2)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
                                 <td th:text="${set.score}">140</td>
                                 <td th:text="${set.anzahlFehler}">0</td>
                             </tr>
-                            <tr id="p4-r4" th:with="set=${game.getGameSet(3)}">
+                            <tr id="p4-r4" th:with="set=${game.getDurchgang(3)}">
                                 <td th:text="${set.anzahlGespielteWuerfe}">30</td>
                                 <td th:text="${set.volleScore}">95</td>
                                 <td th:text="${set.abraeumenScore}">45</td>
@@ -301,45 +298,47 @@
                 </div>
             </div>
         </article>
-        <article id="team-ranking">
-            <h3>Platzierung</h3>
-            <div class="row">
-                <div class="col" th:each="team:${match.teams}">
-                    <h4 th:text="${team.name}">Team 1</h4>
-                    <div class="card" th:each="player:${team.players}">
-                        <div class="card-header">
-                            <h4 th:text="${player.completeName}">Player 1</h4>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text" th:text="${player.game.totalScore}">score</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </article>
-        <article id="team-ranking-plain">
-            <h3>Platzierung</h3>
-            <div>
-                <div class="team-ranking" th:each="team,iter:${match.teams}" th:id="|ranking-${iter.count}|">
-                    <h4 th:text="${team.name}">Team 1</h4>
-                    <div th:each="player, stat : ${team.players}">
-                        <div class="row">
-                            <span class="col" th:text="''+${stat.count}+'. ' +${player.completeName}">Player 1</span>
-                            <span class="col" th:text="${player.club}"> kv</span>
-                            <span class="col" th:text="${player.game.totalScore}">score</span>
-                            <span class="col-3"></span>
-                            <hr>
-                        </div>
-                    </div>
+        <article class="mt-2" id="all-results">
+            <h2>Alle Ergebnisse</h2>
+            <div class="row" th:each="round,iter : ${match.gameRounds}">
+                <div class="col-12">
+                    <h3 class="centering text-center" th:text="|Durchgang ${iter.count}|"></h3>
+                    <table class="table table-striped">
+                        <thead class="text-center align-middle">
+                        <tr>
+                            <th>Spieler</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th:block th:if="${round[0].gameSets.length>2}">
+                                <th>3</th>
+                                <th>4</th>
+                            </th:block>
+                            <th>Gesamt</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center align-middle">
+                        <!--/*@thymesVar id="game" type="core.game.Game"*/-->
+                        <tr th:each="game : ${round}" th:with="player=${game.player}">
+                            <td th:text="${player.completeName}">Max Mustermann</td>
+                            <td th:text="${game.getDurchgang(0).score}">120</td>
+                            <td th:text="${game.getDurchgang(1).score}">XYZ</td>
+                            <th:block th:if="${game.gameSets.length>2}">
+                                <td th:text="${game.getDurchgang(2).score}">XYZ</td>
+                                <td th:text="${game.getDurchgang(3).score}">XYZ</td>
+                            </th:block>
+                            <td th:text="${game.totalScore}">0</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </article>
     </section>
     <hr>
-    <section class="pb-1">
+    <section class="pb-1 pt-1" id="update-section">
         <form class="form-control p-2" method="dialog">
             <label for="interval">Aktualisierungsintervall in Sekunden</label>
-            <input class="number-button" id="interval" min="5" step="1" type="number" value="5">
+            <input class="number-button col-2" id="interval" min="5" step="1" type="number" value="5">
             <div class="btn-group pt-1" id="refresh-button-group">
                 <button class="btn btn-primary pt-1" onclick="updateInterval()" type="button">Aktualisieren</button>
                 <button class="btn btn-warning pt-1" onclick="refresh()" type="button">Manuell aktualisieren</button>
@@ -354,6 +353,106 @@
 </main>
 <footer th:replace="~{main-templates::footer}"/>
 <script th:inline="javascript">
+
+    function allResultsUpdate(data) {
+        const section = document.getElementById('all-results')
+        const tables = section.querySelectorAll('table')
+        for (let roundNumber in data.gameRounds) {
+            const round = data.gameRounds[roundNumber]
+            const table = tables[roundNumber]
+            const tableBody = table.querySelector('tbody')
+            const rows = tableBody.querySelectorAll('tr')
+            const footer = table.querySelector("tfoot")
+            for (const playerNumber in round) {
+                const game = round[playerNumber]
+                const row = rows[playerNumber]
+                const cells = row.querySelectorAll('td')
+                cells[0].innerText = game.playerName
+                cells[1].innerText = game.gameSets[0].score
+                cells[2].innerText = game.gameSets[1].score
+                if (game.gameSets.length > 2) {
+                    cells[3].innerText = game.gameSets[2].score
+                    cells[4].innerText = game.gameSets[3].score
+                }
+                cells[cells.length - 1].innerText = game.totalScore
+            }
+            if (footer) {
+                const footerCells = footer.querySelectorAll('td')
+                footerCells[1].innerText = data.teamTotalVolle
+                footerCells[2].innerText = data.teamTotalVolle
+                footerCells[3].innerText = data.teamTotalAbraeumen
+                footerCells[4].innerText = data.teamTotalAbraeumen
+                footerCells[5].innerText = data.teamScore
+            }
+        }
+    }
+
+    async function refresh() {
+        const id = /*[[${matchName}]]*/""
+        let data;
+        try {
+            const response = await fetch(`/live/get-match?matchId=${id}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            data = await response.json()
+        } catch (error) {
+            ++connectionErrorCounter
+            const state = document.getElementById('connection-status')
+            state.hidden = false
+            if (connectionErrorCounter > 10) {
+                state.innerText =
+                    'Connection failed too often - request stopped. Please check the server connection and then restart the request.'
+                stopUpdate()
+            } else {
+                state.innerText = `Connection failed ${connectionErrorCounter} times. Trying again in ${document.getElementById('interval').value} seconds`
+            }
+            return
+        }
+        connectionErrorCounter = 0
+        const state = document.getElementById('connection-status')
+        state.innerText = ''
+        state.hidden = true
+        const start = Date.now();
+        if (data.final) { // Match finished
+            stopUpdate()
+            const group = document.getElementById('refresh-button-group')
+            group.childNodes.forEach(node => node.disabled = true)
+            state.hidden = false
+            if (data.aborted) {
+                state.classList.add('alert-warning')
+            } else {
+                state.classList.add('alert-success')
+            }
+            state.classList.add('mt-1')
+            state.classList.remove('alert-danger')
+            state.innerText = data.aborted ? 'Match aborted' : 'Match finished'
+        }
+        const currentPlayers = data.currentPlayers
+        for (let i = 0; i < currentPlayers.length; i++) {
+            const player = currentPlayers[i]
+            updateHeader(player, i + 1)
+            const tbody = document.getElementById(`p${i + 1}-r1`).parentElement
+            const changed = updateTable(player.game, i + 1, tbody)
+            if (changed) {
+                updatePicture(player.game.lastWurf, i + 1)
+            }
+        }
+        allResultsUpdate(data)
+        const end = Date.now()
+        console.log(`Refresh took ${end - start} ms`)
+    }
+
+    function stopUpdate() {
+        clearInterval(intervalId)
+        document.getElementById('live-point').setAttribute('fill', 'red')
+    }
+
+    function updateInterval() {
+        clearInterval(intervalId)
+        document.getElementById('live-point').setAttribute('fill', 'green')
+        intervalId = setInterval(refresh, document.getElementById('interval').value * 1000)
+    }
 
     window.onload = function () {
         function createSquare(x, y, size) {
@@ -426,69 +525,6 @@
                 ++idCounter;
             }
         }
-    }
-
-    async function refresh() {
-        const id = /*[[${matchName}]]*/""
-        let data;
-        try {
-            const response = await fetch(`/live/get-match?matchId=${id}`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            data = await response.json()
-        } catch (error) {
-            ++connectionErrorCounter
-            const state = document.getElementById('connection-status')
-            state.hidden = false
-            if (connectionErrorCounter > 10) {
-                state.innerText =
-                    'Connection failed too often - request stopped. Please check the server connection and then restart the request.'
-                stopUpdate()
-            } else {
-                state.innerText = `Connection failed ${connectionErrorCounter} times. Trying again in ${document.getElementById('interval').value} seconds`
-            }
-            return
-        }
-        connectionErrorCounter = 0
-        const state = document.getElementById('connection-status')
-        state.innerText = ''
-        state.hidden = true
-        const start = Date.now();
-        if (data.final) {
-            stopUpdate()
-            const group = document.getElementById('refresh-button-group')
-            group.childNodes.forEach(node => node.disabled = true)
-            state.hidden = false
-            state.classList.add('alert-success')
-            state.classList.remove('alert-danger')
-            state.innerText = 'Match finished'
-        }
-        const players = data.currentPlayers
-        for (let i = 0; i < players.length; i++) {
-            const player = players[i]
-            updateHeader(player, i + 1)
-            const changed = updateTable(player.game, i + 1)
-            if (changed) {
-                updatePicture(player.game.lastWurf, i + 1)
-            }
-        }
-        // teamRanking update
-        updateTeamRanking(data.extra, data.teams)
-        updateTeamRankingPlain(data.extra, data.teams)
-        const end = Date.now()
-        console.log(`Refresh took ${end - start} ms`)
-    }
-
-    function stopUpdate() {
-        clearInterval(intervalId)
-        document.getElementById('live-point').setAttribute('fill', 'red')
-    }
-
-    function updateInterval() {
-        clearInterval(intervalId)
-        document.getElementById('live-point').setAttribute('fill', 'green')
-        intervalId = setInterval(refresh, document.getElementById('interval').value * 1000)
     }
 
     let intervalId = setInterval(refresh, 5_000)

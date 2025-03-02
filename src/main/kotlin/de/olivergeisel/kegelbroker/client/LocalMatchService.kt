@@ -1,11 +1,14 @@
 package de.olivergeisel.kegelbroker.client
 
 
+import core.game.Game
 import core.game.Game120
 import core.match.Match
 import core.point_system._2Teams120PointSystem
+import de.kegelplay.infrastructure.data_reader.AlternatingGameKindGeneralReader
 import de.kegelplay.infrastructure.data_reader.KeglerheimGeneralReader
 import de.kegelplay.infrastructure.update.MatchUpdater
+import de.kegelplay.infrastructure.update.SpecialMatchUpdater
 import de.olivergeisel.kegelbroker.ApplicationProperties
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -70,6 +73,33 @@ class LocalMatchService(
 		liveMatchRepository.save(match)
 	}
 
+	fun createSpecialMatch(form: MatchCreateForm) {
+		val match = LiveMatch(form.matchDate, form.matchName, form.matchId, form.matchType)
+		require(!liveMatchRepository.existsByMatchName(match.matchName)) {
+			"Match with id ${form.matchName} already exists"
+		}
+		val teamNames = loadTeamNames(match)
+		match.teams = teamNames
+		cache.getCache("matches")?.put(
+			match.matchName, SpecialMatchUpdater(
+				getMatchFromDiskSpecial(
+					form.matchDate, form
+						.matchId
+				)
+			)
+		)
+		liveMatchRepository.save(match)
+	}
+
+	private fun getMatchFromDiskSpecial(date: LocalDate, matchName: String): Match<Game> {
+		val dateFormatted = date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+		val dayDir = loadDatePath().resolve(dateFormatted)
+		val matchDir = dayDir.resolve(matchName)
+		val reader = AlternatingGameKindGeneralReader(matchDir)
+		val match = reader.initNewMatch()
+		return match
+	}
+
 	private fun loadTeamNames(match: LiveMatch): List<String> {
 		val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 		val path = Paths.get(applicationProperties.dataPath).resolve(match.date.format(formatter)).resolve(match.matchDir)
@@ -88,6 +118,7 @@ class LocalMatchService(
 				updater?.updateMatch()
 			} catch (e: Exception) {
 				LOGGER.logger.warn("Failed to update match $matchName")
+				LOGGER.logger.debug("", e)
 				continue
 			}
 			val end = LocalDateTime.now()
@@ -111,8 +142,15 @@ class LocalMatchService(
 
 	fun reloadMatch(matchName: String) {
 		val match = liveMatchRepository.findByMatchName(matchName)
-		if (match != null) {
-			cache.getCache("matches")?.put(matchName, MatchUpdater(getMatchFromDisk(match.date, match.matchDir)))
+		if (match == null) {
+			return
+		}
+		if (match.special) {
+			cache.getCache("matches")
+				?.put(matchName, SpecialMatchUpdater(getMatchFromDiskSpecial(match.date, match.matchDir)))
+		} else {
+			cache.getCache("matches")
+				?.put(matchName, MatchUpdater(getMatchFromDisk(match.date, match.matchDir)))
 		}
 	}
 

@@ -1,5 +1,6 @@
 package de.olivergeisel.kegelbroker.client.flat
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import core.game.Game
 import core.game.GameInfo
 import core.game.GameKind
@@ -7,6 +8,7 @@ import core.game.GameSet
 import core.team_and_player.Player
 import java.time.LocalDateTime
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 class GameFlat(game: Game) : Game(null) {
 
 	private var date = game.date
@@ -42,6 +44,9 @@ class GameFlat(game: Game) : Game(null) {
 		}
 	}
 
+	override fun getGameSets(): Array<GameSet> {
+		return sets
+	}
 
 	override fun start() {
 		TODO("Not yet implemented")

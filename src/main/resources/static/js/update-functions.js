@@ -1,45 +1,78 @@
 function updateHeader(player, number) {
     const header = document.getElementById(`p${number}-header`)
-    header.children[0].textContent = player.vorname
-    header.children[1].textContent = player.nachname
-    header.children[2].textContent = player.club
+    header.children[0].textContent = player.vorname +" "+ player.nachname
+    //header.children[1].textContent = player.nachname
+    //header.children[1].textContent = player.club
 }
 
+function createRow(data, playerNumber, rowsNumber) {
+    const row = document.createElement("tr")
+    row.id = `p${playerNumber}-r${rowsNumber}`
+    const cells = []
+    for (let i = 0; i < 5; i++) {
+        const cell = document.createElement("td")
+        cells.push(cell)
+        row.appendChild(cell)
+    }
+    cells[0].innerHTML = data.anzahlGespielteWuerfe
+    cells[1].innerHTML = data.volleScore
+    cells[2].innerHTML = data.abraeumenScore
+    cells[3].innerHTML = data.anzahlFehler
+    cells[4].innerHTML = data.score
+    return row
+}
 
-function updateTable(game, number) {
-    const row1 = document.getElementById(`p${number}-r1`)
-    const row2 = document.getElementById("p" + number + "-r2")
-    const row3 = document.getElementById("p" + number + "-r3")
-    const row4 = document.getElementById("p" + number + "-r4")
-    const summary = document.getElementById(`p${number}-summary`)
-
+function updateTable(game, number, tbody) {
+    const rows = tbody.querySelectorAll("tr")
     const sets = game.gameSets
+    const rowCount = rows.length
+
+    let back = false
+    if (rowCount !== sets.length) {
+        tbody.innerHTML = ""
+        tbody.appendChild(createRow(sets[0], number, 1))
+        tbody.appendChild(createRow(sets[1], number, 2))
+        if (game.gameSets.length > 2) {
+            tbody.appendChild(createRow(sets[2], number, 3))
+            tbody.appendChild(createRow(sets[3], number, 4))
+        }
+        back = true
+    } else {
+        const row1 = document.getElementById(`p${number}-r1`)
+        const row2 = document.getElementById(`p${number}-r2`)
+        const row3 = document.getElementById(`p${number}-r3`)
+        const row4 = document.getElementById(`p${number}-r4`)
+        back += updateRow(row1, sets[0])
+        back += updateRow(row2, sets[1])
+        if (game.gameSets.length > 2) {
+            back += updateRow(row3, sets[2])
+            back += updateRow(row4, sets[3])
+        }
+    }
+    // write footer
+    const summary = document.getElementById(`p${number}-summary`)
     const sumData = {}
     sumData.anzahlGespielteWuerfe = game.numberOfWurf
     sumData.volleScore = game.totalVolle
     sumData.abraeumenScore = game.totalAbraeumen
     sumData.score = game.totalScore
     sumData.anzahlFehler = game.totalFehlwurf
-    let back = updateRow(row1, sets[0])
-    back += updateRow(row2, sets[1])
-    back += updateRow(row3, sets[2])
-    back += updateRow(row4, sets[3])
     back += updateRow(summary, sumData)
     return back
 }
 
 function updateRow(row, data) {
     const cells = row.children
-    let back = cells[0].innerHTML !== data.anzahlGespielteWuerfe;
+    let back = cells[0].innerHTML != data.anzahlGespielteWuerfe;
     cells[0].innerHTML = data.anzahlGespielteWuerfe
-    back += cells[1].innerHTML !== data.volleScore
+    back += cells[1].innerHTML != data.volleScore
     cells[1].innerHTML = data.volleScore
-    back += cells[2].innerHTML !== data.abraeumenScore
+    back += cells[2].innerHTML != data.abraeumenScore
     cells[2].innerHTML = data.abraeumenScore
-    back += cells[3].innerHTML !== data.score
-    cells[3].innerHTML = data.score
-    back += cells[4].innerHTML !== data.anzahlFehler
-    cells[4].innerHTML = data.anzahlFehler
+    back += cells[3].innerHTML != data.anzahlFehler
+    cells[3].innerHTML = data.anzahlFehler
+    back += cells[4].innerHTML != data.score
+    cells[4].innerHTML = data.score
     return back
 }
 
@@ -47,8 +80,8 @@ function updatePicture(wurf, number) {
     const picture = wurf.bild
     const svg = document.getElementById(`picture-${number}-svg`)
     const circles = svg.querySelectorAll("circle")
-    for (let circle of circles) {
-        circle.classList.remove("pin-hit", "pin-stand")
+    for (let i = 0; i < circles.length; i++) {
+        circles[i].classList.remove("pin-hit", "pin-stand")
     }
     if (wurf.anschub) {
         setTimeout(() => {
@@ -60,15 +93,15 @@ function updatePicture(wurf, number) {
 }
 
 function setCircles(circles, code) {
-    const one = (code & 1) !== 0;
-    const two = ((code >> 1) & 1) !== 0;
-    const three = ((code >> 2) & 1) !== 0;
-    const four = ((code >> 3) & 1) !== 0;
-    const five = ((code >> 4) & 1) !== 0;
-    const six = ((code >> 5) & 1) !== 0;
-    const seven = ((code >> 6) & 1) !== 0;
-    const eight = ((code >> 7) & 1) !== 0;
-    const nine = ((code >> 8) & 1) !== 0;
+    const one = (code & 1) != 0;
+    const two = ((code >> 1) & 1) != 0;
+    const three = ((code >> 2) & 1) != 0;
+    const four = ((code >> 3) & 1) != 0;
+    const five = ((code >> 4) & 1) != 0;
+    const six = ((code >> 5) & 1) != 0;
+    const seven = ((code >> 6) & 1) != 0;
+    const eight = ((code >> 7) & 1) != 0;
+    const nine = ((code >> 8) & 1) != 0;
 
     circles[0].classList.add(one ? "pin-hit" : "pin-stand")
     circles[1].classList.add(two ? "pin-hit" : "pin-stand")

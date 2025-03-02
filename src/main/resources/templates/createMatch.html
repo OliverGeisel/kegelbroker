@@ -13,6 +13,7 @@
     </header>
     <section>
         <form action="create" method="post" class="form-control">
+            <input name="_csrf" th:value="${_csrf.token}" type="hidden"/>
             <div class="mb-3">
                 <label for="matchName" class="form-label">Name des Matches</label>
                 <input type="text" class="form-control" id="matchName" name="matchName" placeholder="Name des Matches"
@@ -20,13 +21,14 @@
             </div>
             <div class="mb-3">
                 <label for="matchDate" class="form-label">Datum des Matches</label>
-                <input type="date" class="form-control" id="matchDate" name="matchDate">
+                <input class="form-control" id="matchDate" name="matchDate" th:value="${date}" type="date">
             </div>
 
             <div class="mb-3">
                 <label for="matchSelect" class="form-label">Match</label>
                 <select class="p1 form-control" id="matchSelect" name="matchId" required>
-
+                    <option class="form-control" th:each="match : ${matches}" th:text="${match}"
+                            th:value="${match}"></option>
                 </select>
             </div>
             <div class="mb-3">
@@ -52,6 +54,8 @@
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Match erstellen</button>
+            <button class="btn btn-primary" th:formaction="@{create-special}" type="submit">Special Match erstellen
+            </button>
         </form>
     </section>
 </main>

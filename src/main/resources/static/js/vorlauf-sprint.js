@@ -3,7 +3,7 @@ function updateTable(game, number) {
     const row2 = document.getElementById("p" + number + "-r2")
     const summary = document.getElementById(`p${number}-summary`)
 
-    const sets = game.sets
+    const sets = game.gameSets
     const sumData = {}
     sumData.anzahlGespielteWuerfe = game.numberOfWurf
     sumData.volleScore = game.totalVolle
