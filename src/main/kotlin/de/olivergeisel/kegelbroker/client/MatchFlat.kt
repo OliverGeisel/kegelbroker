@@ -29,6 +29,10 @@ class MatchFlat<G : Game>(match: Match<G>, val teams: List<TeamFlat<G>>, val ext
 		return points
 	}
 
+	override fun getSetPoints(): Map<String?, Double?>? {
+		TODO("Not yet implemented")
+	}
+
 	override fun getCurrentPlayers(): MutableList<Player<GameFlat>> {
 		val players = super.getCurrentPlayers();
 		players.forEach{it.game=null}

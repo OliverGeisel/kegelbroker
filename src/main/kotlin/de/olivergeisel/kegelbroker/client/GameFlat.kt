@@ -11,7 +11,7 @@ class GameFlat(game: Game) : Game(null) {
 
 	private var date = game.date
 	private var playerName = game.currentPlayer.completeName
-	private var sets = game.sets
+	private var sets = game.gameSets
 	var info = game.gameInfo
 	var kind = game.gameKind
 
@@ -36,6 +36,10 @@ class GameFlat(game: Game) : Game(null) {
 
 	override fun start() {
 		TODO("Not yet implemented")
+	}
+
+	override fun getGameSets(): Array<out GameSet?>? {
+		return sets
 	}
 
 	override fun getDurchgang(p0: Int): GameSet {
@@ -72,10 +76,6 @@ class GameFlat(game: Game) : Game(null) {
 
 	override fun getTotalAbraeumen(): Int {
 		return sets.sumOf { it.abraeumenScore }
-	}
-
-	override fun getSets(): Array<GameSet> {
-		return sets
 	}
 
 	override fun setDurchgaenge(p0: MutableList<GameSet>?) {

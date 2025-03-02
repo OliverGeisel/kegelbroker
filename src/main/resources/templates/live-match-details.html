@@ -38,6 +38,22 @@
             <button class="btn btn-danger" name="action" type="submit" value="delete">Löschen</button>
         </form>
     </div>
+    <div>
+        <h2>Trees</h2>
+        <div th:each="tree : ${match.matchTree}">
+            <div>
+                <p th:text="${tree.getName()}"></p>
+            </div>
+        </div>
+        <form>
+            Add Tree:
+            <input name="id" th:value="${match.id}" type="hidden">
+            <select name="treeId">
+                <option th:each="tree : ${matchTrees}" th:text="${tree}" th:value="${tree}"></option>
+            </select>
+            <button class="btn btn-success" name="action" type="submit" value="addTree">Add</button>
+        </form>
+    </div>
 </main>
 <footer th:replace="~{main-templates::footer}"/>
 </body>
