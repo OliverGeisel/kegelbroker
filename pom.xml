@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.16</version>
         <relativePath/>
     </parent>
     <groupId>de.olivergeisel</groupId>
@@ -17,7 +17,7 @@
     <properties>
         <java.version>21</java.version>
         <kotlin.version>1.9.22</kotlin.version>
-        <fasterxml.jackson.version>2.17.1</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.22.3</fasterxml.jackson.version>
     </properties>
 
     <dependencies>
@@ -119,8 +119,8 @@
 
         <dependency>
             <groupId>org.webjars</groupId>
-            <artifactId>webjars-locator</artifactId>
-            <version>0.52</version>
+            <artifactId>webjars-locator-lite</artifactId>
+            <version>1.1.5</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.npm</groupId>
@@ -187,6 +187,11 @@
         </plugins>
     </build>
     <repositories>
+        <repository>
+            <id>local-maven</id>
+            <name>Local Repository</name>
+            <url>file://${user.home}/.m2/repository</url>
+        </repository>
         <repository>
             <id>maven_central</id>
             <name>Maven Central</name>

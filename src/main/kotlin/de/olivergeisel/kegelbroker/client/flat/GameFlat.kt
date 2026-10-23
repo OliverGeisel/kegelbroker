@@ -84,10 +84,6 @@ class GameFlat(game: Game) : Game(null) {
 		return sets.sumOf { it.abraeumenScore }
 	}
 
-	override fun getGameSets(): Array<GameSet> {
-		return sets
-	}
-
 	override fun setGameSets(gameSets: MutableList<GameSet>?) {
 		sets = gameSets!!.toTypedArray()
 	}

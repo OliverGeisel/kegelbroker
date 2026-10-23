@@ -1,6 +1,7 @@
 package de.olivergeisel.kegelbroker.client
 
 import core.game.Game120
+import de.olivergeisel.kegelbroker.client.flat.MatchFlattener
 import de.olivergeisel.kegelbroker.match_tree.MatchNode
 import de.olivergeisel.kegelbroker.match_tree.MatchTree
 import de.olivergeisel.kegelbroker.match_tree.MatchTreeImporter
