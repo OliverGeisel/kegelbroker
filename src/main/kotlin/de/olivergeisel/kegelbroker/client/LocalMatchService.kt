@@ -165,7 +165,7 @@ class LocalMatchService(
 			val end = LocalDateTime.now()
 			LOGGER.logger.info("Match '$matchName' updated in ${Duration.between(start, end).toMillis()} ms")
 			// Todo check when is it aborted
-			if (updater?.match?.statusInfo?.isFinished!!) {
+			if (updater.match?.statusInfo?.isFinished!!) {
 				LOGGER.logger.info("Match '$matchName' finished")
 				match.endMatch()
 				liveMatchRepository.save(match)
@@ -173,6 +173,12 @@ class LocalMatchService(
 		}
 	}
 
+	/**
+	 * Get a match from the cache. If the match is not in the cache, it will be loaded from disk and added to the cache.
+	 * @param matchName the name of the match
+	 * @return the match object
+	 * @throws IllegalArgumentException if the match is not found
+	 */
 	fun getMatchCached(matchName: String): Match<*> {
 		val updater: MatchUpdater<*>? = cache.getCache("matches")?.get(matchName)?.let { it.get() as MatchUpdater<*> }
 		if (updater != null) {
@@ -181,11 +187,12 @@ class LocalMatchService(
 		throw IllegalArgumentException("Match '$matchName' not found")
 	}
 
+	/**
+	 * Force reload a Match from disk and update the cache. This is useful if the match has been updated on disk and the
+	 * cache needs to be refreshed.
+	 */
 	fun reloadMatch(matchName: String) {
-		val match = liveMatchRepository.findByMatchName(matchName)
-		if (match == null) {
-			return
-		}
+		val match = liveMatchRepository.findByMatchName(matchName) ?: return
 		if (match.special) {
 			cache.getCache("matches")
 				?.put(matchName, SpecialMatchUpdater(getMatchFromDiskSpecial(match.date, match.matchDir)))
