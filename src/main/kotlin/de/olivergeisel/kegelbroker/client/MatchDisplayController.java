@@ -15,6 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.Map;
 
+/**
+ * Controller to handle all live-views of all currently running {@link Match}s.
+ *
+ * @author Oliver Geisel
+ * @since 1.0
+ * @version 1.0
+ */
 @Controller
 @RequestMapping("/live")
 public class MatchDisplayController {
@@ -41,8 +48,8 @@ public class MatchDisplayController {
 	}
 
 	private String matchNotFound(String matchId) {
-		LOGGER.warn(STR."Requested match \{matchId} not exsist");
-		return STR."\{templateDir}empty";
+		LOGGER.warn(String.format("Requested match %s not exsist", matchId));
+		return String.format("%sempty", templateDir);
 	}
 
 	@GetMapping({"", "/"})
@@ -52,7 +59,7 @@ public class MatchDisplayController {
 		model.addAttribute("liveMatches", matchesToday.filter(LiveMatch::getRunning));
 		model.addAttribute("completedMatches", matchesToday.filter(it -> !it.getRunning() || it.getStatic()));
 		model.addAttribute("templates", templates.keySet());
-		return STR."\{templateDir}overview";
+		return String.format("%soverview", templateDir);
 	}
 
 	@GetMapping("24-hours/{matchId}")
@@ -60,12 +67,12 @@ public class MatchDisplayController {
 		var match = liveMatchRepository.findByMatchNameIgnoreCase(matchId);
 		if (match == null) {
 			model.addAttribute("error", "Match not found. Nice Try! ;)");
-			return STR."\{templateDir}empty";
+			return String.format("%sempty", templateDir);
 		}
 		var correctMatch = localMatchService.getMatchCached(matchId);
 		model.addAttribute("match", correctMatch);
 		model.addAttribute("matchName", matchId);
-		return STR."\{templateDir}24-hours";
+		return String.format("%s24-hours", templateDir);
 	}
 
 
@@ -77,12 +84,12 @@ public class MatchDisplayController {
 		var template = getTemplate(view);
 		if (match == null) {
 			model.addAttribute("error", "Match not found. Nice Try! ;)");
-			return STR."\{templateDir}empty";
+			return String.format("%sempty", templateDir);
 		}
 		var correctMatch = localMatchService.getMatchCached(matchId);
 		model.addAttribute("match", correctMatch);
 		model.addAttribute("matchName", matchId);
-		return STR."\{templateDir}\{template}";
+		return String.format("%s%s", templateDir, template);
 	}
 
 	private String getTemplate(String name) {
@@ -108,9 +115,9 @@ public class MatchDisplayController {
 		var match = liveMatchRepository.findByMatchName(matchId);
 		if (match == null) {
 			model.addAttribute("error", "Match not found. Nice Try! ;)");
-			return STR."\{templateDir}empty";
+			return String.format("%sempty", templateDir);
 		}
-		return STR."\{templateDir}empty";//"matchDisplay4Against";
+		return String.format("%sempty", templateDir);//"matchDisplay4Against";
 	}
 
 	@GetMapping("2-teams/{matchId}")
@@ -123,7 +130,7 @@ public class MatchDisplayController {
 		model.addAttribute("match", correctMatch);
 		model.addAttribute("matchName", correctMatch);
 		model.addAttribute("id", matchId);
-		return STR."\{templateDir}match-display-2-teams";
+		return String.format("%smatch-display-2-teams", templateDir);
 	}
 
 	@GetMapping("2-against/{matchId}")
@@ -131,9 +138,9 @@ public class MatchDisplayController {
 		var match = liveMatchRepository.findByMatchName(matchId);
 		if (match == null) {
 			model.addAttribute("error", "Match not found. Nice Try! ;)");
-			return STR."\{templateDir}empty";
+			return String.format("%sempty", templateDir);
 		}
-		return STR."\{templateDir}empty";// "matchDisplay2Against";
+		return String.format("%sempty", templateDir);// "matchDisplay2Against";
 	}
 
 	@GetMapping("vorlauf/{matchId}")
@@ -142,16 +149,16 @@ public class MatchDisplayController {
 		Match correctMatch;
 		if (match == null) {
 			model.addAttribute("error", "Match not found. Nice Try! ;)");
-			return STR."\{templateDir}empty";
+			return String.format("%sempty", templateDir);
 		} else {
 			correctMatch = localMatchService.getMatchCached(matchId);
 			model.addAttribute("id", matchId);
 			model.addAttribute("match", correctMatch);
 		}
 		if (correctMatch.getConfig().getKind() == GameKind.GAME_40) {
-			return STR."\{templateDir}match-display-vorlauf-sprint";
+			return String.format("%smatch-display-vorlauf-sprint", templateDir);
 		}
-		return STR."\{templateDir}match-display-vorlauf";
+		return String.format("%smatch-display-vorlauf", templateDir);
 	}
 
 
@@ -168,7 +175,7 @@ public class MatchDisplayController {
 			Match<?> match = localMatchService.getMatchCached(matchId);
 			return matchFlattener.flat(match);
 		} catch (IllegalArgumentException e) {
-			LOGGER.warn(STR."Requested match \{matchId} not exsist");
+			LOGGER.warn(String.format("Requested match %s not exsist", matchId));
 			return null;
 		}
 	}

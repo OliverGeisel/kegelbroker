@@ -8,6 +8,15 @@ import core.game.GameSet
 import core.team_and_player.Player
 import java.time.LocalDateTime
 
+/**
+ * Flat version of [Game] for JSON serialization.
+ * Converts a normal [Game] to a flat version for JSON serialization, which is used for the REST API.
+ * That means no cyclic references and no complex objects, only primitive types and simple objects.
+ *
+ * @author Oliver Geisel
+ * @since 1.0
+ * @version 1.0
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class GameFlat(game: Game) : Game(null) {
 

@@ -1,4 +1,4 @@
-package de.olivergeisel.kegelbroker
+package de.olivergeisel.kegelbroker.match
 
 import core.game.Game
 import core.match.Match
@@ -6,7 +6,9 @@ import core.match.Match2Teams
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
 
-
+/**
+ * Controller for all Matches. Noz used currently.
+ */
 @Controller
 class MatchController(private val messagingTemplate: SimpMessagingTemplate) {
 
@@ -15,7 +17,7 @@ class MatchController(private val messagingTemplate: SimpMessagingTemplate) {
 
 
 	fun getMatch(): Match<Game> {
-		return Match2Teams<Game>(null,null,null,null,null,null,null)
+		return Match2Teams<Game>(null, null, null, null, null, null, null)
 	}
 	/*
 

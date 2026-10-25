@@ -7,6 +7,15 @@ import core.team_and_player.Player
 import core.team_and_player.Team
 import core.util.Pair
 
+/**
+ * Flat version of [Match] for JSON serialization.
+ * Converts a normal [Match] to a flat version for JSON serialization, which is used for the REST API.
+ * That means no cyclic references and no complex objects, only primitive types and simple objects.
+ *
+ * @author Oliver Geisel
+ * @since 1.0
+ * @version 1.0
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class MatchFlat<G : Game>(private val iMatch: Match<G>, val teams: List<TeamFlat<G>>, val extra: Any) : Match<GameFlat>(
 	iMatch.config,

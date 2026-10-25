@@ -7,7 +7,8 @@ import java.util.*
 
 /**
  * Entity to represent a Match, that is hosted on the application
- * It contains
+ * It contains the date, name, directory and type of the match, as well as the teams and the match tree (if there is
+ * one).
  *
  * @author Oliver Geisel
  *
@@ -101,7 +102,7 @@ class LiveMatch(
 }
 
 /**
- * Enum to represent the type of match
+ * Enum to represent the type of [core.match.Match]
  * <ul>
  *     <li>FINALE</li>
  *     <li>HALBFINALE</li>

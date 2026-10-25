@@ -33,6 +33,7 @@ import kotlin.io.path.name
  * @param applicationProperties the application properties
  * @param liveMatchRepository the repository for live matches
  * @param cache the cache manager to store matches in
+ * @param matchTreeRepository the repository for match trees
  */
 @Service
 class LocalMatchService(
@@ -225,8 +226,8 @@ class LocalMatchService(
 	fun deleteMatch(match: LiveMatch) {
 		try {
 			val matchOp = liveMatchRepository.findById(match.id!!)
-			liveMatchRepository.delete(matchOp.get())
-			cache.getCache("matches")?.evict(matchOp.get().matchName)
+			liveMatchRepository.delete(matchOp.orElseThrow())
+			cache.getCache("matches")?.evict(matchOp.orElseThrow().matchName)
 
 		}catch (_ : java.lang.IllegalArgumentException){
 			LOGGER.logger.warn("Match not found! '$match' was not deleted")

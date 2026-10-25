@@ -59,7 +59,7 @@ public class MatchTreeController {
 		child.setName(name);
 		parent.add(child);
 		matchNodeRepository.save(parent);
-		return STR."redirect:edit?id=\{matchTreeId}";
+		return String.format("redirect:edit?id=%s", matchTreeId);
 	}
 
 	@PostMapping("edit-player")
@@ -72,7 +72,7 @@ public class MatchTreeController {
 		player.setTeamIndex(index);
 		player.setTeamNumber(teamNumber);
 		matchNodeRepository.save(node);
-		return STR."redirect:edit?id=\{matchTreeId}";
+		return String.format("redirect:edit?id=%s", matchTreeId);
 	}
 
 	@PostMapping("change-name")
@@ -81,7 +81,7 @@ public class MatchTreeController {
 		var node = matchNodeRepository.findById(id).orElseThrow();
 		node.setName(name);
 		matchNodeRepository.save(node);
-		return STR."redirect:edit?id=\{matchTreeId}";
+		return String.format("redirect:edit?id=%s", matchTreeId);
 	}
 
 	@PostMapping("add-extra-match")
@@ -91,7 +91,7 @@ public class MatchTreeController {
 		extraMatch.setName(name);
 		matchTree.setExtraMatch(extraMatch);
 		matchTreeRepository.save(matchTree);
-		return STR."redirect:edit?id=\{id}";
+		return String.format("redirect:edit?id=%s", id);
 	}
 
 	@PostMapping("delete")

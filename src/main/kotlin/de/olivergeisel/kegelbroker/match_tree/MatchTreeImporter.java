@@ -66,7 +66,7 @@ public class MatchTreeImporter {
 		name = name.replace(".json", "");
 		name = name.replace(".JSON", "");
 		try {
-			var back = objectMapper.readValue(new File(STR."\{IMPORT_PATH}\{name}.json"), MatchTree.class);
+			var back = objectMapper.readValue(new File(String.format("%s%s.json", IMPORT_PATH, name)), MatchTree.class);
 			// fix parent
 			fixChildren(back.getRoot());
 		} catch (Exception e) {

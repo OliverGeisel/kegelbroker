@@ -7,7 +7,8 @@ import java.util.*
 
 
 /**
- * This class is used to flatten a {@link Match} for json representation.
+ * This class is used to flatten a  [Match] for JSON representation.
+ * This Flattener gets one [Match] and flattens all its containing elements, like [core.team_and_player.Team]s and [core.team_and_player.Player]s, to a flat version for JSON serialization, which is used for the REST API.
  *
  * @author Oliver Geisel
  * @see Match
