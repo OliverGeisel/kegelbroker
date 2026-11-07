@@ -33,10 +33,14 @@ class SecurityConfig : WebMvcConfigurer {
 	@Bean
 	fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
 
-		http.csrf { }
+		http.csrf { it.ignoringRequestMatchers("/login") }
 		http.authorizeHttpRequests { it.anyRequest().permitAll() }
 		http.headers { it.frameOptions { it2 -> it2.disable() } }
-		http.formLogin { }
+		http.formLogin {it
+				.passwordParameter("pwd").usernameParameter("n")
+				.loginPage("/login").defaultSuccessUrl("/live").failureForwardUrl("/login?error=true")
+				.permitAll()
+		}
 		http.cors { }
 		http.logout { it.logoutSuccessUrl("/").clearAuthentication(true).deleteCookies("JSESSIONID") }
 		return http.build();

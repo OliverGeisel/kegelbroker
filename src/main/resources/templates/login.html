@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Login</title>
+
+    <style>
+        :root {
+            --bg-gradient-start: #f3f6ff;
+            --bg-gradient-end: #eef2ff;
+            --text-color: #111827;
+            --card-bg: #ffffff;
+            --card-shadow: rgba(17, 24, 39, 0.08);
+            --muted: #6b7280;
+            --input-bg: #ffffff;
+            --input-border: #d1d5db;
+            --primary: #1b469e;
+            --primary-contrast: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-gradient-start: #0b1020;
+                --bg-gradient-end: #0f1724;
+                --text-color: #e6eef8;
+                --card-bg: #0b1220;
+                --card-shadow: rgba(2, 6, 23, 0.7);
+                --muted: #9aa4b2;
+                --input-bg: #07101a;
+                --input-border: #21303b;
+                --primary: #3b82f6;
+                --primary-contrast: #0b1220;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            color: var(--text-color);
+            padding: 1rem;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 6px 18px var(--card-shadow);
+            padding: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        form.login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* center the label text above inputs */
+            font-size: 0.9rem;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        input[type="text"], input[type="password"], input[name="n"] {
+            height: 42px;
+            width: 100%;
+            padding: 0 0.75rem;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent);
+            background: var(--input-bg);
+        }
+
+        ::placeholder {
+            color: #9ca3af;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+
+        button#submit-button {
+            background: var(--primary);
+            color: var(--primary-contrast);
+            border: none;
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        button#submit-button:hover {
+            filter: brightness(0.95);
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 1rem;
+            }
+
+            header h1 {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+</head>
+<body>
+<div class="card">
+    <header>
+        <h1>Bitte geben Sie die Logindaten ein</h1>
+    </header>
+
+    <main>
+        <form action="/login" class="login-form" method="post">
+            <label>
+                Nutzername:
+                <input id="n-input" name="n" placeholder="Username">
+            </label>
+            <label>
+                Passwort:
+                <input id="pwd-input" name="pwd" placeholder="Password" type="password">
+            </label>
+
+            <div class="actions">
+                <button id="submit-button" type="submit">
+                    Einloggen
+                </button>
+            </div>
+
+        </form>
+    </main>
+</div>
+</body>
+</html>
