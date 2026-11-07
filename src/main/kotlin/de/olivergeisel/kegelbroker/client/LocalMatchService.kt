@@ -28,6 +28,8 @@ import java.time.format.DateTimeFormatter
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
+private const val DATE_FORMAT = "dd.MM.yyyy"
+
 /**
  * Service for managing local matches
  * @param applicationProperties the application properties
@@ -61,7 +63,7 @@ class LocalMatchService(
 
 
 	fun getMatchNames(day: LocalDate): List<String> {
-		val dateFormatted = day.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+		val dateFormatted = day.format(DateTimeFormatter.ofPattern(DATE_FORMAT))
 		val dayDir = loadDatePath().resolve(dateFormatted)
 		return dayDir.toFile().listFiles()?.map { it.name } ?: emptyList()
 	}
@@ -96,7 +98,7 @@ class LocalMatchService(
 	}
 
 	private fun getMatchFromDiskSpecial(date: LocalDate, matchName: String): Match<Game> {
-		val dateFormatted = date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+		val dateFormatted = date.format(DateTimeFormatter.ofPattern(DATE_FORMAT))
 		val dayDir = loadDatePath().resolve(dateFormatted)
 		val matchDir = dayDir.resolve(matchName)
 		val reader = AlternatingGameKindGeneralReader(matchDir)
@@ -105,7 +107,7 @@ class LocalMatchService(
 	}
 
 	private fun loadTeamNames(match: LiveMatch): List<String> {
-		val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+		val formatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
 		val path = Paths.get(applicationProperties.dataPath).resolve(match.date.format(formatter)).resolve(match.matchDir)
 		val teamNamesDir = Files.list(path).filter{it.isDirectory() && it.name!= "Backup-Daten"}.map { it.name }
 		return teamNamesDir.toList()
@@ -117,7 +119,7 @@ class LocalMatchService(
 		for (matchTree in matchTrees) {
 			// root node
 			val rootNode = matchTree.root
-			// Todo assumes that there is only one team in the tree
+			// TODO assumes that there is only one team in the tree
 			val teamNumber = rootNode.players[0].teamNumber
 			val team = realMatch.teams[teamNumber]
 			for (player in rootNode.players) {
@@ -210,7 +212,7 @@ class LocalMatchService(
 	 * @return the match object
 	 */
 	fun getMatchFromDisk(date: LocalDate, matchName: String): Match<Game120> {
-		val dateFormatted = date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+		val dateFormatted = date.format(DateTimeFormatter.ofPattern(DATE_FORMAT))
 		val dayDir = loadDatePath().resolve(dateFormatted)
 		val matchDir = dayDir.resolve(matchName)
 		val reader = KeglerheimGeneralReader(matchDir, true)
