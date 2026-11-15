@@ -43,6 +43,11 @@ class LandingController(
 	fun createMatch(model: Model): String {
 		model.addAttribute("pointSystems", listOf("2 Teams", "Vorlauf", "Paarweise", "4 gegeneinander"))
 		model.addAttribute("matchTypes", MatchType.entries.toTypedArray())
+		model.addAttribute("date", LocalDate.now())
+		val matchTeams = localMatchService.getMatchTeams(LocalDate.now())
+		model.addAttribute("matches", matchTeams.keys)
+		model.addAttribute("matchTeams", matchTeams)
+
 		return "createMatch"
 	}
 

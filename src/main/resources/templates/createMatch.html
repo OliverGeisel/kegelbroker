@@ -5,12 +5,14 @@
     <title>Neues Match</title>
     <th:block th:replace="~{main-templates::head-default}"></th:block>
 </head>
-<body>
+<body class="body-layout">
 <main class="container">
     <div th:replace="~{main-templates :: navigation}"></div>
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
     <header>
         <h1>Neues Match</h1>
     </header>
+    <div id="match-load-error" class="alert alert-danger" role="alert" hidden></div>
     <section>
         <form action="create" method="post" class="form-control">
             <input name="_csrf" th:value="${_csrf.token}" type="hidden"/>
@@ -21,15 +23,23 @@
             </div>
             <div class="mb-3">
                 <label for="matchDate" class="form-label">Datum des Matches</label>
-                <input class="form-control" id="matchDate" name="matchDate" th:value="${date}" type="date">
+                <input class="form-control" id="matchDate" name="matchDate" th:value="${date}" type="date" required>
             </div>
 
             <div class="mb-3">
                 <label for="matchSelect" class="form-label">Match</label>
                 <select class="p1 form-control" id="matchSelect" name="matchId" required>
-                    <option class="form-control" th:each="match : ${matches}" th:text="${match}"
+                    <option th:if="${matches.empty}" selected disabled value="" >Keine Spiele gefunden</option>
+                    <option th:unless="${matches.empty}" selected disabled value="" id="noMatchSelected">Keines gewählt! Bitte
+                        auswählen</option>
+                    <option class="form-control" th:each="match : ${matches}"
+                            th:text="|${match} - ${matchTeams.get(match)}|"
                             th:value="${match}"></option>
                 </select>
+            </div>
+            <div class="mb-3">
+                <label for="teamNames" class="form-label">Teams:</label><br>
+                <span id="teamNames" class="" disabled>Bitte zuerst ein Spiel auswählen.</span>
             </div>
             <div class="mb-3">
                 <label for="pointSystem" class="form-label">Punktesystem</label>
@@ -40,7 +50,7 @@
             </div>
             <div class="mb-3">
                 <label for="server" class="form-label">Server</label>
-                <input class="p1 form-control" id="server" name="pointSystem" type="url">
+                <input class="p1 form-control" id="server" name="server" type="url" disabled placeholder="Nicht aktiv!">
             </div>
             <div class="mb-3">
                 <label for="localServer" class="form-label">Ist lokaler Server?</label>
@@ -48,39 +58,91 @@
             </div>
             <div class="mb-3">
                 <label for="matchType" class="form-label">Matchtyp</label>
+                <span class="text disabled">ZUR ZEIT NICHT WICHTIG</span>
                 <select class="p1 form-control" id="matchType" name="matchType" required>
                     <option class="p1 form-control" th:each="matchType : ${matchTypes}" th:value="${matchType}"
                             th:text="${matchType}" ></option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Match erstellen</button>
-            <button class="btn btn-primary" th:formaction="@{create-special}" type="submit">Special Match erstellen
-            </button>
+            <div id="button-area" class="mb-3">
+                <button type="submit" class="btn btn-primary mt-1">Match erstellen</button>
+                <button class="btn btn-primary" th:formaction="@{create-special}" type="submit">Special Match erstellen
+                </button>
+            </div>
         </form>
     </section>
 </main>
 
 <script>
+    let matchTeams = [[${matchTeams}]] ;
+    const matchSelect = document.getElementById('matchSelect');
+    const teamNames = document.getElementById('teamNames');
+    const matchLoadError = document.getElementById('match-load-error');
 
-    function replaceMatches (matches) {
-        const matchSelect = document.getElementById('matchSelect');
+    function updateTeamNames() {
+        if (!matchSelect.value) {
+            teamNames.textContent = 'Bitte zuerst ein Spiel auswählen.';
+            return;
+        }
+        const teams = matchTeams[matchSelect.value] || [];
+        teamNames.textContent = teams.length > 0
+            ? teams.join(', ')
+            : 'Für dieses Spiel wurden keine Teams gefunden.';
+    }
+
+    function replaceMatches (teamsByMatch) {
+        matchTeams = teamsByMatch;
         matchSelect.innerHTML = '';
-        matches.forEach(function (match) {
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        if (Object.keys(teamsByMatch).length === 0) {
+            placeholder.textContent = 'Keine Spiele gefunden';
+            placeholder.selected = true;
+            placeholder.disabled = true;
+            matchSelect.appendChild(placeholder);
+            updateTeamNames();
+            return;
+        }else {
+            placeholder.textContent = 'Keines gewählt! Bitte auswählen';
+            placeholder.selected = true;
+            placeholder.disabled = true;
+            matchSelect.appendChild(placeholder);
+        }
+        Object.keys(teamsByMatch).sort().forEach(function (match) {
             const option = document.createElement('option');
             option.value = match;
-            option.text = match;
+            option.text = match + ' - ' + (teamsByMatch[match].length > 0 ? teamsByMatch[match].join(', ') : 'Keine Teams gefunden');
             matchSelect.appendChild(option);
         });
+        updateTeamNames();
     }
 
     document.getElementById('matchDate').addEventListener('change', function () {
-        fetch('/day?date=' + this.value)
-            .then(response => response.json())
+        if (!this.value) {
+            return;
+        }
+        matchLoadError.hidden = true;
+        fetch('/day/match-teams?date=' + encodeURIComponent(this.value))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Die Spiele für dieses Datum konnten nicht geladen werden.');
+                }
+                return response.json();
+            })
             .then(data => {
                 replaceMatches(data);
+                matchLoadError.textContent = '';
+                matchLoadError.hidden = true;
+            })
+            .catch(error => {
+                matchLoadError.textContent = error.message;
+                matchLoadError.hidden = false;
             });
     });
+
+    matchSelect.addEventListener('change', updateTeamNames);
+
 </script>
+<footer th:replace="~{main-templates::footer}"></footer>
 </body>
-<footer th:replace="~{main-templates::footer}"/>
 </html>
