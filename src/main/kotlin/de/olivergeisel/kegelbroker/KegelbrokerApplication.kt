@@ -22,23 +22,27 @@ fun main(args: Array<String>) {
 	runApplication<KegelbrokerApplication>(*args)
 }
 
+private const val LOGIN_PATH = "/login"
+
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 class SecurityConfig : WebMvcConfigurer {
 
+
+
 	override fun addViewControllers(registry: ViewControllerRegistry) {
-		registry.addViewController("/login").setViewName("login")
+		registry.addViewController(LOGIN_PATH).setViewName("login")
 	}
 
 	@Bean
 	fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
 
-		http.csrf { it.ignoringRequestMatchers("/login") }
+		http.csrf { it.ignoringRequestMatchers(LOGIN_PATH) }
 		http.authorizeHttpRequests { it.anyRequest().permitAll() }
 		http.headers { it.frameOptions { it2 -> it2.disable() } }
 		http.formLogin {it
 				.passwordParameter("pwd").usernameParameter("n")
-				.loginPage("/login").defaultSuccessUrl("/live").failureForwardUrl("/login?error=true")
+				.loginPage(LOGIN_PATH).defaultSuccessUrl("/live").failureForwardUrl("/login?error=true")
 				.permitAll()
 		}
 		http.cors { }
