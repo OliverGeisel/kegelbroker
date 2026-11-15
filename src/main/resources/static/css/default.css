@@ -1,4 +1,19 @@
 
+.body-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.body-layout > main {
+    flex: 1 0 auto;
+}
+
+.body-layout > footer {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
 .svg-container {
     display: inline-block;
     position: relative;
@@ -46,4 +61,3 @@
         r: 5;
     }
 }
-

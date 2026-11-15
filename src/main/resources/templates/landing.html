@@ -5,12 +5,20 @@
     <title>Kegelbroker - Client</title>
     <th:block th:replace="~{main-templates::head-default}"></th:block>
 </head>
-<body>
+<body class="body-layout">
 <main class="container">
     <div th:replace="~{main-templates :: navigation}"></div>
     <header>
         <h1>Willkommen bei Kegelbroker</h1>
     </header>
+    <section th:if="${error} or ${message}" id="message-error-section">
+        <p th:if="${error}" class="alert alert-danger" role="alert">
+            <span th:text="${error}"></span>
+        </p>
+        <p th:if="${message}" class="alert alert-success" role="alert">
+            <span th:text="${message}"></span>
+        </p>
+    </section>
     <section>
         Kegelbroker ist ein System zum Sammeln bzw. Anzeigen von Kegelspielen in Echtzeit.
         Dies ist die Client-Anwendung. Diese Software läuft auf dem System, das die Kegelspiele durchführt oder

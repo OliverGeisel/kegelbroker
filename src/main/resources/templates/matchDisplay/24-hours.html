@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <title th:text="${id}">2 Teams</title>
     <th:block th:replace="~{main-templates::head-default}"></th:block>
-    <link href="/css/default.css" rel="stylesheet">
     <script src="/js/update-functions.js"></script>
 </head>
-<body>
+<body class="body-layout">
 <main class="container-fluid">
     <div th:replace="~{matchDisplay/basic-match-fragments :: alpha-info}"></div>
     <!--/*@thymesVar id="match" type="core.match.Match"*/-->

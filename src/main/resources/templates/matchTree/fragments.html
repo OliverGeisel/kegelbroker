@@ -12,7 +12,9 @@
             <form method="post" th:action="change-name">
                 <input name="id" th:value="${child.id}" type="hidden">
                 <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
-                <input name="name" required th:value="${child.name}" type="text">
+                <label> Kind-Knoten-Name:
+                    <input name="name" required th:value="${child.name}" type="text" class="form-control">
+                </label>
                 <button class="btn btn-primary" type="submit">Change Name</button>
             </form>
         </div>
@@ -24,7 +26,9 @@
                     <input name="id" th:value="${child.id}" type="hidden">
                     <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
                     <input name="position" th:value="${iter.index}" type="hidden">
-                    <input class="form-control-sm" name="name" th:value="${player.name}" type="text">
+                    <label>Name
+                        <input class="form-control-sm" name="name" th:value="${player.name}" type="text">
+                    </label>
                     <label> TeamIndex
                         <input class="form-control-sm" max="1000" min="-1" name="index" th:style="${player.teamIndex}==-1?'background-color: red':''"
                                th:value="${player.teamIndex}" type="number"
@@ -42,13 +46,13 @@
             <div class="col" th:each="child_child:${child.children}">
                 <div th:replace="~{:: child-node (${child_child})}"></div>
             </div>
-            <form method="post" th:action="@{add-child}"
+            <form method="post" th:action="@{add-child}" class="mb-2"
                   th:unless="${child.config.numChildren} <= ${child.children.size()}
               or ${child.level}>=${matchTree.maxDepth}">
                 <input name="id" th:value="${child.id}" type="hidden">
                 <input name="matchTreeId" th:value="${matchTree.id}" type="hidden">
                 <label>Name des Kind-Knotens
-                    <input name="name" required type="text">
+                    <input name="name" required type="text" class="form-control">
                 </label>
                 <button class="btn btn-primary">Add Child</button>
             </form>

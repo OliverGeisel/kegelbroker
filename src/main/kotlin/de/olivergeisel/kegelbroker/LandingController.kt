@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.time.LocalDate
 import java.util.*
 
@@ -45,67 +46,38 @@ class LandingController(
 		return "createMatch"
 	}
 
-	@GetMapping("/day")
-	@ResponseBody
-	fun day(@RequestParam date: LocalDate): List<String> {
-		return localMatchService.getMatchNames(date)
-	}
-
 	@PostMapping("/create")
-	fun createMatch(form: MatchCreateForm): String {
+	fun createMatch(form: MatchCreateForm, RedirectAttributes: RedirectAttributes): String {
 		LOGGER.info("Start creating match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
 		try {
 			localMatchService.createMatch(form)
 		} catch (e: IllegalArgumentException) {
 			LOGGER.error("Failed to create match ${form.matchId} on ${form.matchDate} with name ${form.matchName}", e)
+			RedirectAttributes.addFlashAttribute("error", "Failed to create match: ${e.message}")
 			return "redirect:/create"
 		}
 		LOGGER.info("Created match ${form.matchId} on ${form.matchDate} with name ${form.matchName}")
+		RedirectAttributes.addFlashAttribute("message", "Match created successfully")
 		return "redirect:/"
 	}
 
 	@GetMapping("/detail")
-	fun detail(@RequestParam id: UUID, model: Model): String {
+	fun detail(@RequestParam id: UUID, model: Model,redirectAttributes: RedirectAttributes): String {
 		val match = matchRepository.findById(id)
 		if (match.isEmpty) {
-			model.addAttribute("error", "Match not found")
-			return "live-match-details"
+			redirectAttributes.addAttribute("error", "Match not found")
+			return "redirect:/"
 		}
 		model.addAttribute("match", matchRepository.findById(id).get())
 		model.addAttribute("matchTrees", MatchTreeImporter.readMatchTrees())
 		return "live-match-details"
 	}
 
-	private fun fixChildren(nodes: List<MatchNode>, parent: MatchNode): Unit {
-		for (node in nodes) {
-			node.children.forEach {
-				it.parent = parent
-				fixChildren(it.children, it)
-			}
-		}
-	}
-
-	private fun fixingTree(tree: MatchTree): Unit {
-		fixChildren(tree.root.children, tree.root)
-	}
-
-	@PostMapping("/add-tree")
-	fun addTree(@RequestParam id: UUID, @RequestParam treeId: String): String {
-		val match = matchRepository.findById(id).get()
-		var tree = MatchTreeImporter.loadBlank(treeId)
-		tree = matchTreeRepository.save(tree)
-		fixingTree(tree)
-		tree = matchTreeRepository.save(tree)
-		match.matchTree.add(tree)
-		matchRepository.save(match)
-		return "redirect:detail?id=${id}"
-	}
-
 	@PostMapping("/detail")
 	fun detail(@RequestParam id: UUID, @RequestParam action: String): String {
 		val match = matchRepository.findById(id)
 		if (match.isEmpty) {
-			return "redirect:"
+			return "redirect:/"
 		}
 		when (action) {
 			"continue" -> {
@@ -138,4 +110,41 @@ class LandingController(
 		return "redirect:/detail?id=$id"
 	}
 
+	private fun fixChildren(nodes: List<MatchNode>, parent: MatchNode): Unit {
+		for (node in nodes) {
+			node.children.forEach {
+				it.parent = parent
+				fixChildren(it.children, it)
+			}
+		}
+	}
+
+	private fun fixingTree(tree: MatchTree): Unit {
+		fixChildren(tree.root.children, tree.root)
+	}
+
+	@PostMapping("/add-tree")
+	fun addTree(@RequestParam id: UUID, @RequestParam treeId: String): String {
+		val match = matchRepository.findById(id).get()
+		var tree = MatchTreeImporter.loadBlank(treeId)
+		tree = matchTreeRepository.save(tree)
+		fixingTree(tree)
+		tree = matchTreeRepository.save(tree)
+		match.matchTree.add(tree)
+		matchRepository.save(match)
+		return "redirect:detail?id=${id}"
+	}
+
+
+	@GetMapping("/day")
+	@ResponseBody
+	fun day(@RequestParam date: LocalDate): List<String> {
+		return localMatchService.getMatchNames(date)
+	}
+
+	@GetMapping("/day/match-teams")
+	@ResponseBody
+	fun dayMatchTeams(@RequestParam date: LocalDate): Map<String, List<String>> {
+		return localMatchService.getMatchTeams(date)
+	}
 }

@@ -6,6 +6,16 @@ import jakarta.persistence.*;
 
 import java.util.UUID;
 
+/**
+ * Representation of an player in a {@link MatchTree}. This class is used to store the player information in the database.
+ * It has a name, score, points, teamIndex and teamNumber. The teamIndex is used to identify the position of the player
+ * Inside his team.
+ * The teamNumber is used to identify the team of the player in the match tree.
+ *
+ * @author Oliver Geisel
+ * @version 1.0
+ * @since 1.0
+ */
 @Entity
 public class MatchTreePlayer {
 
@@ -17,7 +27,13 @@ public class MatchTreePlayer {
 	private String name      = "";
 	private int    score;
 	private double points;
+	/**
+	 * Index inside the Team. Starts with 0. -1 means no team. This is used to identify the team of the player in the match tree.
+	 */
 	private int    teamIndex = -1;
+	/**
+	 * Number of the Team. -1 means no team. First valid team is 0.
+	 */
 	private int teamNumber = -1;
 
 	protected MatchTreePlayer() {

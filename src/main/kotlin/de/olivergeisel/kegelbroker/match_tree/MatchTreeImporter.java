@@ -18,9 +18,16 @@ public class MatchTreeImporter {
 		});
 	}
 
+	/**
+	 * Read all existing {@link MatchTree}s from the IMPORT_PATH.
+	 * @return The name of all MatchTrees as String
+	 */
 	public static List<String> readMatchTrees() {
 		var folder = new File(IMPORT_PATH);
 		var back = new LinkedList<String>();
+		if (!folder.exists()){
+			return back;
+		}
 		for (var file : folder.listFiles()) {
 			back.add(file.getName());
 		}

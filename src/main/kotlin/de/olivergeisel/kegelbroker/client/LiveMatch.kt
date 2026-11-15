@@ -31,8 +31,9 @@ class LiveMatch(
 	var matchDir: String,
 	/**
 	 * Type of the match like finale, halbfinale, vorlauf
+	 * @see MatchType
 	 */
-	val matchType: MatchType,
+	var matchType: MatchType,
 
 	/**
 	 * Running state of the match.
@@ -68,7 +69,7 @@ class LiveMatch(
 
 
 	fun getTeamsAsString(): String{
-		return teams.joinToString(", ")
+			return teams.joinToString(", ")
 	}
 
 	fun initMatch() {

@@ -7,6 +7,7 @@
         <meta content="width=device-width, initial-scale=1" name="viewport">
         <link crossorigin="anonymous" href="/webjars/bootstrap/css/bootstrap.min.css"
               rel="stylesheet">
+        <link href="/css/default.css" rel="stylesheet">
         <script crossorigin="anonymous"
                 src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
     </th:block>
@@ -32,7 +33,7 @@
                     <a class="nav-link" href="/create">Erstellen</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/edit">Bearbeiten</a>
+                    <a class="nav-link" href="/live/edit-select">Matches bearbeiten</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/match-tree">Match-Trees</a>
@@ -41,11 +42,12 @@
         </div>
     </div>
 </nav>
-<footer th:fragment="footer" class=" container bg-body-tertiary">
-    <div class="row ps-2">
+<footer th:fragment="footer" class="container bg-body-tertiary">
+    <div class="row ps-2 m-1">
         <div class="col">
             <div id="copyright">
-                &copy; 2024
+                &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}" th:remove="tag">2024</span>
+                Kegelbroker-Client
             </div>
         </div>
         <div class="col">
