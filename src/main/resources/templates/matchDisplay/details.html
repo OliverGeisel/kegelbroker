@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|Details for ${matchName}|">Details</title>
+    <th:block th:replace="~{main-templates::head-default}"></th:block>
+</head>
+<body class="body-layout">
+<main class="container">
+    <div th:replace="~{main-templates :: navigation}"></div>
+    <header>
+        <h1 th:text="|Details for ${matchName}|">Details</h1>
+    </header>
+    <section>
+        <header>
+            <h3>Match Details</h3>
+        </header>
+        <article>
+            <div class="card">
+                <div class="card-header">
+                    <span th:remove="tag" th:text="${matchName}"></span>
+                </div>
+                <div class="card-body">
+                    Es spielen:
+                    <h5 class="card-title" th:text="${match.teamsAsString}">M1</h5>
+                    Tag: <span th:text="${match.date}">2024-01-01</span><br>
+                    Directory: <span th:text="${match.matchDir}">/path/to/match</span><br>
+                    Match Type: <span th:text="${match.matchType}">Type</span><br>
+                    Running: <span th:text="${match.running}">true</span><br>
+                    Static: <span th:text="${match.static}">false</span><br>
+                    Special: <span th:text="${match.special}">false</span><br>
+
+                </div>
+
+                <div class="card-footer">
+                    <a class="btn btn-primary"
+                       th:href="@{/live/{matchId}(matchId=${matchId},view=${match.matchType})}">Live View</a>
+                    <a class="btn btn-secondary" th:href="@{/live/edit(matchId=${matchId})}">Bearbeiten</a>
+                </div>
+            </div>
+        </article>
+    </section>
+</main>
+<footer th:replace="~{main-templates::footer}"></footer>
+</body>
+</html>

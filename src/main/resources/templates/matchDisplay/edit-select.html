@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Match zum Bearbeiten auswählen</title>
+    <th:block th:replace="~{main-templates::head-default}"></th:block>
+</head>
+<body class="body-layout">
+<main class="container">
+    <div th:replace="~{main-templates :: navigation}"></div>
+    <header class="py-3">
+        <h1>Match zum Bearbeiten auswählen</h1>
+    </header>
+
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
+
+    <section th:if="${matches.empty}" class="alert alert-info" role="status">
+        Es sind noch keine Matches vorhanden.
+        <a th:href="@{/create}">Ein Match erstellen</a>
+    </section>
+
+    <section th:unless="${matches.empty}">
+        <div class="mb-3">
+            <label for="match-filter" class="form-label">Matches filtern</label>
+            <input id="match-filter" class="form-control" type="search" placeholder="Name, Datum oder Team">
+        </div>
+        <div class="list-group" id="match-list">
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+               th:each="match : ${matches}"
+               th:href="@{/live/edit(matchId=${match.matchName})}"
+               th:attr="data-search=${match.matchName + ' ' + match.date + ' ' + match.teamsAsString}">
+                <span>
+                    <strong th:text="${match.matchName}">Matchname</strong>
+                    <small class="d-block text-body-secondary">
+                        <span th:text="${match.date}">Datum</span>
+                        &middot;
+                        <span th:text="${match.teamsAsString}">Teams</span>
+                    </small>
+                </span>
+                <span class="badge text-bg-secondary" th:text="${match.matchType}">Typ</span>
+            </a>
+        </div>
+        <p id="no-match-results" class="alert alert-info mt-3" hidden>Keine passenden Matches gefunden.</p>
+    </section>
+</main>
+<footer th:replace="~{main-templates::footer}"></footer>
+<script>
+    const filter = document.getElementById('match-filter');
+    if (filter) {
+        filter.addEventListener('input', () => {
+            const query = filter.value.trim().toLocaleLowerCase();
+            const matches = document.querySelectorAll('#match-list a');
+            let visibleCount = 0;
+            matches.forEach((match) => {
+                const visible = match.dataset.search.toLocaleLowerCase().includes(query);
+                match.hidden = !visible;
+                if (visible) visibleCount++;
+            });
+            document.getElementById('no-match-results').hidden = visibleCount > 0;
+        });
+    }
+</script>
+</body>
+</html>

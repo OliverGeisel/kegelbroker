@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|Match bearbeiten: ${match.matchName}|">Match bearbeiten</title>
+    <th:block th:replace="~{main-templates::head-default}"></th:block>
+</head>
+<body class="body-layout">
+<main class="container">
+    <div th:replace="~{main-templates :: navigation}"></div>
+    <header class="py-3">
+        <h1 th:text="|Match bearbeiten: ${match.matchName}|">Match bearbeiten</h1>
+    </header>
+
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+    <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
+
+    <form method="post" th:action="@{/live/edit}" class="card card-body">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
+        <input name="matchId" th:value="${match.matchName}" type="hidden">
+
+        <div class="mb-3">
+            <label for="matchName" class="form-label">Anzeigename</label>
+            <input id="matchName" name="matchName" class="form-control" required
+                   th:value="${match.matchName}">
+        </div>
+        <div class="mb-3">
+            <label for="date" class="form-label">Datum der Quelldatei</label>
+            <input id="date" name="date" type="date" class="form-control" required
+                   th:value="${match.date}">
+        </div>
+        <div class="mb-3">
+            <label for="matchDir" class="form-label">Spielverzeichnis</label>
+            <input id="matchDir" name="matchDir" class="form-control" required
+                   th:value="${match.matchDir}">
+            <div class="form-text">Das Verzeichnis muss unter dem gewählten Datum vorhanden sein.</div>
+        </div>
+        <div class="mb-3">
+            <label for="matchType" class="form-label">Matchtyp</label>
+            <select id="matchType" name="matchType" class="form-select" required>
+                <option th:each="type : ${matchTypes}" th:value="${type}" th:text="${type}"
+                        th:selected="${type == match.matchType}"></option>
+            </select>
+        </div>
+
+        <fieldset class="mb-3">
+            <legend class="fs-6">Status</legend>
+            <div class="form-check">
+                <input id="running" name="running" type="checkbox" class="form-check-input" value="true"
+                       th:checked="${match.running}">
+                <label for="running" class="form-check-label">Match läuft</label>
+            </div>
+            <div class="form-check">
+                <input id="static" name="static" type="checkbox" class="form-check-input" value="true"
+                       th:checked="${match.static}">
+                <label for="static" class="form-check-label">Keine automatischen Aktualisierungen</label>
+            </div>
+            <div class="form-check">
+                <input id="special" name="special" type="checkbox" class="form-check-input" value="true"
+                       th:checked="${match.special}">
+                <label for="special" class="form-check-label">Special-Match-Quelle</label>
+            </div>
+        </fieldset>
+
+        <div class="mb-3">
+            <label class="form-label">Teams (aus der Quelldatei)</label>
+            <input class="form-control" readonly th:value="${match.teamsAsString}">
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+            <a class="btn btn-secondary" th:href="@{/live/edit-select}">Abbrechen</a>
+        </div>
+    </form>
+</main>
+<footer th:replace="~{main-templates::footer}"></footer>
+</body>
+</html>

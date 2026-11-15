@@ -25,6 +25,8 @@ interface LiveMatchRepository : CrudRepository<LiveMatch, UUID>{
 
 	fun existsByMatchName(matchName: String): Boolean
 
+	fun existsByMatchNameIgnoreCase(matchName: String): Boolean
+
 	fun findByRunning(running: Boolean): Streamable<LiveMatch>
 
 	fun findByMatchType(matchType: MatchType): Streamable<LiveMatch>
